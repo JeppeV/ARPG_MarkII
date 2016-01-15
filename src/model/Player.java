@@ -14,7 +14,7 @@ public class Player implements Entity {
         this.height = height;
     }
 
-    public void setX(int x){
+    public void setX(int x) {
         this.x = x;
     }
 

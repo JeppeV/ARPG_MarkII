@@ -6,7 +6,7 @@ import org.newdawn.slick.Input;
 
 /**
  * Created by Jeppe Vinberg on 15-01-2016.
- *
+ * <p>
  * This class is the controller accepting input events relevant for the Player entity.
  */
 public class PlayerController extends AbstractController {
