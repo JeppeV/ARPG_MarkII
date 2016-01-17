@@ -4,9 +4,10 @@ import model.Game;
 import model.Player;
 import org.newdawn.slick.Input;
 
+
 /**
  * Created by Jeppe Vinberg on 15-01-2016.
- * <p>
+ *
  * This class is the controller accepting input events relevant for the Player entity.
  */
 public class PlayerController extends AbstractController {
@@ -21,12 +22,42 @@ public class PlayerController extends AbstractController {
 
     @Override
     public void keyPressed(int i, char c) {
-        System.out.println("A key was pressed!");
+        switch (i){
+            case Input.KEY_W:
+                player.toggleUpMovement();
+                break;
+            case Input.KEY_D:
+                player.toggleRightMovement();
+                break;
+            case Input.KEY_S:
+                player.toggleDownMovement();
+                break;
+            case Input.KEY_A:
+                player.toggleLeftMovement();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void keyReleased(int i, char c) {
-
+        switch (i){
+            case Input.KEY_W:
+                player.toggleUpMovement();
+                break;
+            case Input.KEY_D:
+                player.toggleRightMovement();
+                break;
+            case Input.KEY_S:
+                player.toggleDownMovement();
+                break;
+            case Input.KEY_A:
+                player.toggleLeftMovement();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

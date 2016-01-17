@@ -16,14 +16,16 @@ public class Main extends StateBasedGame {
         super("ARPG_MarkII");
         this.addState(new MenuState(menuStateID));
         this.addState(new PlayState(playStateID));
+        this.enterState(playStateID);
 
     }
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
-        this.getState(menuStateID).init(gameContainer, this);
-        this.getState(playStateID).init(gameContainer, this);
-        this.enterState(playStateID);
+        gameContainer.setVSync(true);
+        gameContainer.setTargetFrameRate(60);
+        gameContainer.setMinimumLogicUpdateInterval(10);
+        gameContainer.setMaximumLogicUpdateInterval(20);
     }
 
 }

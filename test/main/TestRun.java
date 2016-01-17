@@ -15,7 +15,7 @@ public class TestRun {
     public void test() {
         try {
             AppGameContainer app = new AppGameContainer(new Main());
-            app.setDisplayMode(1600, 900, false);
+            app.setDisplayMode(1300, 600, false);
             app.start();
         } catch (SlickException e) {
             e.printStackTrace();
