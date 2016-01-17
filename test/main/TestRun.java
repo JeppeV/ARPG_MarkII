@@ -16,6 +16,10 @@ public class TestRun {
         try {
             AppGameContainer app = new AppGameContainer(new Main());
             app.setDisplayMode(1300, 600, false);
+            app.setVSync(true);
+            app.setTargetFrameRate(60);
+            app.setMinimumLogicUpdateInterval(10);
+            app.setMaximumLogicUpdateInterval(20);
             app.start();
         } catch (SlickException e) {
             e.printStackTrace();

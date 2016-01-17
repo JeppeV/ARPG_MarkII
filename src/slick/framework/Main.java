@@ -22,10 +22,7 @@ public class Main extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
-        gameContainer.setVSync(true);
-        gameContainer.setTargetFrameRate(60);
-        gameContainer.setMinimumLogicUpdateInterval(10);
-        gameContainer.setMaximumLogicUpdateInterval(20);
+
     }
 
 }

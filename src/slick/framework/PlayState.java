@@ -47,11 +47,8 @@ public class PlayState extends BasicGameState {
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
 
-        if(i > 28){
-            System.out.println("                                        HIGH!");
-        }else{
-            System.out.println("delta: " + i);
-        }
+        //System.out.println("delta: " + i);
+
 
         game.update(gameContainer, i);
     }
