@@ -1,6 +1,7 @@
 package slick.framework;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -17,6 +18,7 @@ public class Main extends StateBasedGame {
         this.addState(new MenuState(menuStateID));
         this.addState(new PlayState(playStateID));
         this.enterState(playStateID);
+
 
     }
 
