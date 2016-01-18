@@ -8,7 +8,9 @@ import org.newdawn.slick.SlickException;
  */
 public interface Game {
 
-    public Player getPlayer();
+    Player getPlayer();
 
-    public void update(GameContainer gameContainer, int delta)throws SlickException;
+    Tile[][] getTiles();
+
+    void update(GameContainer gameContainer, int delta) throws SlickException;
 }

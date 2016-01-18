@@ -7,7 +7,7 @@ import org.newdawn.slick.Input;
 
 /**
  * Created by Jeppe Vinberg on 15-01-2016.
- *
+ * <p>
  * This class is the controller accepting input events relevant for the Player entity.
  */
 public class PlayerController extends AbstractController {
@@ -22,7 +22,7 @@ public class PlayerController extends AbstractController {
 
     @Override
     public void keyPressed(int i, char c) {
-        switch (i){
+        switch (i) {
             case Input.KEY_W:
                 player.toggleUpMovement();
                 break;
@@ -42,7 +42,7 @@ public class PlayerController extends AbstractController {
 
     @Override
     public void keyReleased(int i, char c) {
-        switch (i){
+        switch (i) {
             case Input.KEY_W:
                 player.toggleUpMovement();
                 break;

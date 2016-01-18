@@ -13,9 +13,11 @@ public class GraphicsHandler {
 
     private Game game;
     private Image playerImage;
+    private TileGraphicsHandler tileGraphicsHandler;
 
     public GraphicsHandler(Game game) throws SlickException {
         this.game = game;
+        this.tileGraphicsHandler = new TileGraphicsHandler(game.getTiles());
         initPlayer();
     }
 
@@ -25,6 +27,7 @@ public class GraphicsHandler {
     }
 
     public void render(Graphics graphics) throws SlickException {
+        tileGraphicsHandler.render();
         playerImage.draw();
     }
 }

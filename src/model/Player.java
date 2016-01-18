@@ -1,4 +1,3 @@
-
 package model;
 
 import org.newdawn.slick.GameContainer;
@@ -26,19 +25,19 @@ public class Player implements Entity {
         this.moveThreshold = 0.0001f;
     }
 
-    public void toggleRightMovement(){
+    public void toggleRightMovement() {
         right = !right;
     }
 
-    public void toggleLeftMovement(){
+    public void toggleLeftMovement() {
         left = !left;
     }
 
-    public void toggleUpMovement(){
+    public void toggleUpMovement() {
         up = !up;
     }
 
-    public void toggleDownMovement(){
+    public void toggleDownMovement() {
         down = !down;
     }
 
@@ -72,36 +71,36 @@ public class Player implements Entity {
         move(delta);
     }
 
-    private void move(int delta){
+    private void move(int delta) {
         float x = 0, y = 0;
-        if(right){
+        if (right) {
             x += moveSpeed;
         }
-        if(left){
+        if (left) {
             x -= moveSpeed;
         }
-        if(up){
+        if (up) {
             y -= moveSpeed;
         }
-        if(down){
+        if (down) {
             y += moveSpeed;
         }
         Vector2f force = new Vector2f(x, y);
         force.scale(delta);
-        if((velocity.length() < maxSpeed)) {
+        if ((velocity.length() < maxSpeed)) {
             addForce(force);
         }
         position.add(velocity);
-        if(velocity.length() > 0){
+        if (velocity.length() > 0) {
             velocity = slowdown(velocity);
         }
 
     }
 
-    private Vector2f slowdown(Vector2f vel){
+    private Vector2f slowdown(Vector2f vel) {
         Vector2f velocity = vel;
         velocity.scale(0.90f);
-        if(velocity.length() < moveThreshold){
+        if (velocity.length() < moveThreshold) {
             velocity.set(0, 0);
         }
         return velocity;

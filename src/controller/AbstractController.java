@@ -4,7 +4,7 @@ import org.newdawn.slick.InputListener;
 
 /**
  * Created by Jeppe Vinberg on 15-01-2016.
- *
+ * <p>
  * An abstract class to factor out unused methods while still implementing the InputListener.
  * The result is that any class that extends this class will have the interface of
  * an InputListener which only accepts mouse events and key events.
