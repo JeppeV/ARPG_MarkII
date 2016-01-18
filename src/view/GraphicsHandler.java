@@ -1,5 +1,6 @@
 package view;
 
+import model.Entity;
 import model.Game;
 import model.Player;
 import org.newdawn.slick.Graphics;
@@ -22,7 +23,7 @@ public class GraphicsHandler {
     }
 
     private void initPlayer() throws SlickException {
-        Player player = game.getPlayer();
+        Entity player = game.getPlayer();
         playerImage = new PlayerImage(player);
     }
 

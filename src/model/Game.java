@@ -8,7 +8,7 @@ import org.newdawn.slick.SlickException;
  */
 public interface Game {
 
-    Player getPlayer();
+    Entity getPlayer();
 
     Tile[][] getTiles();
 
