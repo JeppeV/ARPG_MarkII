@@ -32,7 +32,7 @@ public class PlayState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-        game = new GameImpl();
+        game = new GameImpl(gameContainer);
         Input input = gameContainer.getInput();
         input.addListener(new PlayerController(game));
         graphicsHandler = new GraphicsHandler(game);

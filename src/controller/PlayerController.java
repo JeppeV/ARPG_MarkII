@@ -17,23 +17,23 @@ public class PlayerController extends AbstractController {
 
     public PlayerController(Game game) {
         this.game = game;
-        this.player = game.getPlayer();
+        this.player = (Player)game.getPlayer();
     }
 
     @Override
     public void keyPressed(int i, char c) {
         switch (i) {
             case Input.KEY_W:
-                player.toggleUpMovement();
+                player.setMoveUp(true);
                 break;
             case Input.KEY_D:
-                player.toggleRightMovement();
+                player.setMoveRight(true);
                 break;
             case Input.KEY_S:
-                player.toggleDownMovement();
+                player.setMoveDown(true);
                 break;
             case Input.KEY_A:
-                player.toggleLeftMovement();
+                player.setMoveLeft(true);
                 break;
             default:
                 break;
@@ -44,16 +44,16 @@ public class PlayerController extends AbstractController {
     public void keyReleased(int i, char c) {
         switch (i) {
             case Input.KEY_W:
-                player.toggleUpMovement();
+                player.setMoveUp(false);
                 break;
             case Input.KEY_D:
-                player.toggleRightMovement();
+                player.setMoveRight(false);
                 break;
             case Input.KEY_S:
-                player.toggleDownMovement();
+                player.setMoveDown(false);
                 break;
             case Input.KEY_A:
-                player.toggleLeftMovement();
+                player.setMoveLeft(false);
                 break;
             default:
                 break;
