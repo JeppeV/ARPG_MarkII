@@ -21,6 +21,7 @@ public class Player extends Observable implements Entity {
     private float moveThreshold;
     private int width, height;
     private boolean right, left, up, down;
+    private float leftOffsetBound, topOffsetBound, rightOffsetBound, bottomOffsetBound;
 
 
     public Player(int x, int y, int width, int height, GameImpl game) {
@@ -33,6 +34,12 @@ public class Player extends Observable implements Entity {
         this.width = width;
         this.height = height;
         this.right = this.left = this.up = this.down = false;
+        this.leftOffsetBound = 0;
+        this.topOffsetBound = 0;
+        this.rightOffsetBound = tileHandler.getTiles().length * Tile.WIDTH - gameContainer.getWidth();
+        this.bottomOffsetBound = tileHandler.getTiles()[0].length * Tile.HEIGHT - gameContainer.getHeight();
+        System.out.println("Right: " + rightOffsetBound);
+        System.out.println("Bottom: " + bottomOffsetBound);
         this.moveSpeed = 0.1f;
         this.maxSpeed = 5;
         this.moveThreshold = 0.0001f;
@@ -40,7 +47,7 @@ public class Player extends Observable implements Entity {
     }
 
     private Rectangle initMovementBox(float size){
-        float movementBoxWidth = size * ((GameImpl) game).getGameContainer().getAspectRatio();
+        float movementBoxWidth = size * game.getGameContainer().getAspectRatio();
         float movementBoxHeight = size;
         return new Rectangle((gameContainer.getWidth()/2) - (movementBoxWidth/2), (gameContainer.getHeight()/2) - (movementBoxHeight/2), movementBoxWidth, movementBoxHeight );
     }
@@ -90,7 +97,7 @@ public class Player extends Observable implements Entity {
 
     private void move(int delta) {
         float x = 0, y = 0;
-        Vector2f v1, v2;
+        Vector2f velocityX, velocityY;
         if (right) {
             x += moveSpeed;
         }
@@ -114,36 +121,73 @@ public class Player extends Observable implements Entity {
             velocity = slowdown(velocity);
         }
 
+        //splitting velocity vector into X and Y components
+        velocityX = new Vector2f(velocity.getX(), 0);
+        velocityY = new Vector2f(0, velocity.getY());
+
+        if(intersectsOffsetBoundLeftOrRight()){
+            position.add(velocityX);
+        }else if(intersectsMovementBoxLeftOrRight()){
+            setChanged();
+            notifyObservers(velocityX);
+        }else{
+            position.add(velocityX);
+        }
+
+        if(intersectsOffsetBoundTopOrBottom()){
+            position.add(velocityY);
+        }else if(intersectsMovementBoxTopOrBottom()){
+            setChanged();
+            notifyObservers(velocityY);
+        }else{
+            position.add(velocityY);
+        }
+
+
+
+
+
+        /*
         if(intersectsMovementBoxLeftOrRight() && intersectsMovementBoxTopOrBottom()){
             setChanged();
             notifyObservers(velocity);
         }else{
-            //splitting velocity vector
-            v1 = new Vector2f(velocity.getX(), 0);
-            v2 = new Vector2f(0, velocity.getY());
             if(intersectsMovementBoxLeftOrRight()){
                 setChanged();
-                notifyObservers(v1);
-                position.add(v2);
+                notifyObservers(velocityX);
+                position.add(velocityY);
             }else if(intersectsMovementBoxTopOrBottom()){
                 setChanged();
-                notifyObservers(v2);
-                position.add(v1);
+                notifyObservers(velocityY);
+                position.add(velocityX);
             }else{
                 position.add(velocity);
             }
         }
+        */
 
 
 
 
     }
 
+    private boolean intersectsOffsetBoundLeftOrRight(){
+        if(((tileHandler.getXoffset() <= leftOffsetBound) && isMovingLeft()) || ((tileHandler.getXoffset() >= rightOffsetBound) && isMovingRight())){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean intersectsOffsetBoundTopOrBottom(){
+        if(((tileHandler.getYoffset() <= topOffsetBound) && isMovingUp()) || ((tileHandler.getYoffset() >= bottomOffsetBound) && isMovingDown())){
+            return true;
+        }
+        return false;
+    }
+
     private boolean intersectsMovementBoxLeftOrRight(){
         float x1 = movementBox.getX();
-        float y1 = movementBox.getY();
         float x2 = movementBox.getX() + movementBox.getWidth();
-        float y2 = movementBox.getY() + movementBox.getHeight();
 
         if(((position.getX() <= x1) && isMovingLeft()) || ((position.getX() >= x2) && isMovingRight())){
             return true;
@@ -153,9 +197,7 @@ public class Player extends Observable implements Entity {
     }
 
     private boolean intersectsMovementBoxTopOrBottom(){
-        float x1 = movementBox.getX();
         float y1 = movementBox.getY();
-        float x2 = movementBox.getX() + movementBox.getWidth();
         float y2 = movementBox.getY() + movementBox.getHeight();
 
 
@@ -192,12 +234,11 @@ public class Player extends Observable implements Entity {
     }
 
     private Vector2f slowdown(Vector2f vel) {
-        Vector2f velocity = vel;
-        velocity.scale(0.90f);
+        vel.scale(0.90f);
         //if character is moving slower than threshold, halt
-        if (velocity.length() < moveThreshold) {
-            velocity.set(0, 0);
+        if (vel.length() < moveThreshold) {
+            vel.set(0, 0);
         }
-        return velocity;
+        return vel;
     }
 }

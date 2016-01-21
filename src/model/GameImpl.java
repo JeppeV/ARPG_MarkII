@@ -21,7 +21,7 @@ public class GameImpl implements Game {
     public GameImpl(GameContainer gameContainer) {
         this.gameContainer = gameContainer;
         this.dungeonGenerator = new DungeonGenerator();
-        this.map = dungeonGenerator.generateDungeon(50, 50);
+        this.map = dungeonGenerator.generateDungeon(10, 10);
         this.mapAdapter = new MapAdapter(map);
         this.tileHandler = new TileHandler(map);
         //test values for player

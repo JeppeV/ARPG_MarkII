@@ -47,8 +47,8 @@ public class TileHandler implements Observer {
 
     private void changeTilesOffset(float xOffset, float yOffset){
         TileImpl tile;
-        this.xOffset -= xOffset;
-        this.yOffset -= yOffset;
+        this.xOffset += xOffset;
+        this.yOffset += yOffset;
         //System.out.println("xOffset: " + this.xOffset + ", yOffset: " + this.yOffset);
         for(int x = 0; x < tiles.length; x++){
             for(int y = 0; y < tiles[0].length; y++){
