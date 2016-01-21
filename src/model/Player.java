@@ -80,15 +80,15 @@ public class Player extends Observable implements Entity {
         return position.getY();
     }
 
+    //temp
     public float getGlobalCenteredX(){
         return position.getX() + tileHandler.getXOffset() + getWidth();
     }
 
-    public  float getGlobalCenteredY(){
+    //temp
+    public  float getGlobalCenteredY() {
         return position.getY() + tileHandler.getYOffset() + getHeight();
     }
-
-
 
     @Override
     public int getWidth() {

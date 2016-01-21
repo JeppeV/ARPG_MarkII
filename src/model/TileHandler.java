@@ -32,21 +32,6 @@ public class TileHandler implements Observer {
         return tiles;
     }
 
-    public Tile[] getNeighbourTiles(int x, int y){
-        Tile[] res = new Tile[9];
-        res[0] = tiles[x][y-1];
-        res[1] = tiles[x+1][y-1];
-        res[2] = tiles[x+1][y];
-        res[3] = tiles[x+1][y+1];
-        res[4] = tiles[x][y+1];
-        res[5] = tiles[x-1][y-1];
-        res[6] = tiles[x-1][y];
-        res[7] = tiles[x-1][y+1];
-        res[8] = tiles[x][y];
-
-        return res;
-    }
-
     public Tile[][] getTiles(){
         return tiles;
     }
