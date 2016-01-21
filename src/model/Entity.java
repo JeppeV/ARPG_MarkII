@@ -2,6 +2,8 @@ package model;
 
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.geom.Rectangle;
+import org.w3c.dom.css.Rect;
 
 /**
  * Created by Jeppe Vinberg on 15-01-2016.
@@ -17,4 +19,6 @@ public interface Entity {
     int getHeight();
 
     void update(GameContainer gameContainer, int delta);
+
+    Rectangle getCollisionRectangle();
 }

@@ -18,7 +18,7 @@ public class TileGraphicsHandler {
         tileImages = initTileImages(tiles);
     }
 
-    private TileImage[][] initTileImages(Tile[][] tiles) throws SlickException{
+    private TileImage[][] initTileImages(Tile[][] tiles) throws SlickException {
         TileImage[][] tileImages = new TileImage[tiles.length][tiles[0].length];
         Tile tile;
         String ref;

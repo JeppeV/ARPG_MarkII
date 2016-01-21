@@ -5,8 +5,8 @@ package model;
  */
 public interface Tile {
 
-    int WIDTH = 160;
-    int HEIGHT = 160;
+    int WIDTH = 120;
+    int HEIGHT = 120;
 
     float getX();
 

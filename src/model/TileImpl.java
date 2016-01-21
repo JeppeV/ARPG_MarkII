@@ -39,4 +39,9 @@ public class TileImpl extends Rectangle implements Tile {
     public char getID() {
         return id;
     }
+
+    @Override
+    public String toString(){
+        return "Tile(" + (int)getX() + "," + (int)getY() + ")";
+    }
 }

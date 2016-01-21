@@ -16,14 +16,13 @@ public class TileHandler implements Observer {
 
     public TileHandler(Map map){
         //temporary initial values for offset
-        this.xOffset = 0;
-        this.yOffset = 0;
+        this.xOffset = 0.0f;
+        this.yOffset = 0.0f;
         this.tiles = initTiles(map);
     }
 
     private TileImpl[][] initTiles(Map map){
         TileImpl[][] tiles = new TileImpl[map.getWidthInTiles()][map.getHeightInTiles()];
-        int id;
         for(int x = 0; x < tiles.length; x++){
             for(int y = 0; y < tiles[0].length; y++){
                 tiles[x][y] = new TileImpl(x * Tile.WIDTH, y * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT, map.getTile(x, y));
@@ -33,15 +32,30 @@ public class TileHandler implements Observer {
         return tiles;
     }
 
+    public Tile[] getNeighbourTiles(int x, int y){
+        Tile[] res = new Tile[9];
+        res[0] = tiles[x][y-1];
+        res[1] = tiles[x+1][y-1];
+        res[2] = tiles[x+1][y];
+        res[3] = tiles[x+1][y+1];
+        res[4] = tiles[x][y+1];
+        res[5] = tiles[x-1][y-1];
+        res[6] = tiles[x-1][y];
+        res[7] = tiles[x-1][y+1];
+        res[8] = tiles[x][y];
+
+        return res;
+    }
+
     public Tile[][] getTiles(){
         return tiles;
     }
 
-    public float getXoffset(){
+    public float getXOffset(){
         return xOffset;
     }
 
-    public float getYoffset(){
+    public float getYOffset(){
         return yOffset;
     }
 
@@ -59,7 +73,6 @@ public class TileHandler implements Observer {
 
         }
     }
-
 
     @Override
     public void update(Observable o, Object arg) {
