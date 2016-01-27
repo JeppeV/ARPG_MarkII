@@ -1,9 +1,6 @@
-package generator.generators;
+package generator.generators.dungeon;
 
-import generator.standard.Constants;
-import generator.standard.Coordinates;
-import generator.standard.Dungeon;
-import generator.standard.Room;
+import generator.standard.*;
 
 import java.util.Random;
 
@@ -14,13 +11,11 @@ public class RoomGenerator {
     private int minRoomSize, maxRoomSize;
 
     public RoomGenerator() {
-        this.NO_ATTEMPTS = 20;
+        this.NO_ATTEMPTS = 40;
         this.numberOfRooms = 30;
         this.minRoomSize = 3;
         this.maxRoomSize = 7;
-
     }
-
 
 
     public Dungeon generateRooms(Dungeon dungeon) {
@@ -38,14 +33,14 @@ public class RoomGenerator {
         for (int i = 0; i < numberOfRooms; i++) {
             attempts = NO_ATTEMPTS;
             while (attempts > 0) {
-                x1 = random.nextInt(maxX) + Constants.BORDER;
-                y1 = random.nextInt(maxY) + Constants.BORDER;
-                roomWidth = minRoomSize + random.nextInt(maxRoomSize - minRoomSize) - Constants.BORDER;
-                roomHeight = minRoomSize + random.nextInt(maxRoomSize - minRoomSize) - Constants.BORDER;
+                x1 = random.nextInt(maxX) + Map.BORDER;
+                y1 = random.nextInt(maxY) + Map.BORDER;
+                roomWidth = minRoomSize + random.nextInt(maxRoomSize - minRoomSize) - Map.BORDER;
+                roomHeight = minRoomSize + random.nextInt(maxRoomSize - minRoomSize) - Map.BORDER;
                 room = new Room(x1, y1, roomWidth, roomHeight);
                 overlapsExisting = false;
                 for (Room r : dungeon.rooms()) {
-                    overlapsExisting = room.overlaps(r, 1);
+                    overlapsExisting = room.overlaps(r, 3);
                     if (overlapsExisting) {
                         attempts--;
                         break;
@@ -59,7 +54,7 @@ public class RoomGenerator {
             }
 
         }
-        System.out.println("RoomGenerator succesfully created " + roomsAdded + "/" + numberOfRooms + " rooms, using " + NO_ATTEMPTS + " attempts each.");
+        System.out.println("RoomGenerator successfully created " + roomsAdded + "/" + numberOfRooms + " rooms, using " + NO_ATTEMPTS + " attempts each.");
         return d;
     }
 
@@ -68,7 +63,7 @@ public class RoomGenerator {
         int y1 = room.getY1();
         for (int x = 0; x < room.getWidth(); x++) {
             for (int y = 0; y < room.getHeight(); y++) {
-                dungeon.setTile(x1 + x, y1 + y, Constants.FLOOR);
+                dungeon.setTile(x1 + x, y1 + y, TileType.FLOOR);
                 dungeon.setVisited(x1 + x, y1 + y, true);
                 room.addTile(new Coordinates(x1 + x, y1 + y));
 

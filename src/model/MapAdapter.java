@@ -1,8 +1,7 @@
 package model;
 
-import generator.standard.Constants;
-import generator.standard.Dungeon;
 import generator.standard.Map;
+import generator.standard.TileType;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
@@ -42,7 +41,7 @@ public class MapAdapter implements TileBasedMap {
     @Override
     public boolean blocked(PathFindingContext pathFindingContext, int i, int i1) {
         char t = map.getTile(i, i1);
-        return t != Constants.FLOOR;
+        return t != TileType.FLOOR;
     }
 
     @Override

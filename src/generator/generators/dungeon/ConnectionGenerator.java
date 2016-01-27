@@ -1,14 +1,11 @@
-package generator.generators;
+package generator.generators.dungeon;
 
-import generator.standard.Constants;
+import generator.standard.TileType;
 import generator.standard.Coordinates;
 import generator.standard.Dungeon;
 import generator.standard.Region;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Jeppe Vinberg on 06-01-2016.
@@ -18,6 +15,7 @@ public class ConnectionGenerator {
     private ArrayList<Region> regions;
     private HashMap<Region, Boolean> merged;
     private Random random;
+    private final double randomConnectorChance = 0.25;
 
 
     public ConnectionGenerator(){
@@ -36,7 +34,7 @@ public class ConnectionGenerator {
     public Dungeon generateConnections(Dungeon dungeon){
         init(dungeon);
         //all connectors and the regions they connect
-        HashMap<Coordinates, ArrayList<Region>> allConnectors = findAllConnectors(dungeon);
+        HashMap<Coordinates, ArrayList<Region>> allConnectors = findAllSingleConnectors(dungeon);
         //connectors currently being considered and corresponding unmerged regions
         HashMap<Coordinates, Region> currentConnectors = new HashMap<>();
         //connectors to be removed
@@ -68,8 +66,9 @@ public class ConnectionGenerator {
             //choose random connector and open it up
             Coordinates randomC = getRandomKey(currentConnectors);
             otherRegion = currentConnectors.get(randomC);
-            dungeon.setTile(randomC.getX(), randomC.getY(), Constants.FLOOR);
-            dungeon.setVisited(randomC.getX(), randomC.getY(), true);
+            dungeon.setTile(randomC, TileType.FLOOR);
+            dungeon.setVisited(randomC, true);
+
 
             //remove connectors between the two rooms from the connector sets
             obsoleteConnectors.clear();
@@ -83,13 +82,24 @@ public class ConnectionGenerator {
                 allConnectors.remove(c);
                 currentConnectors.remove(c);
             }
+            addChanceConnector(dungeon, currentConnectors);
             currentRegion = otherRegion;
         }
 
         return dungeon;
     }
 
-    private HashMap<Coordinates,ArrayList<Region>> findAllConnectors(Dungeon dungeon){
+
+    private Dungeon addChanceConnector(Dungeon dungeon, HashMap<Coordinates, Region> currentConnectors){
+        if(Math.random() <= randomConnectorChance && currentConnectors.size() != 0){
+            Coordinates randomC = getRandomKey(currentConnectors);
+            dungeon.setTile(randomC, TileType.FLOOR);
+            dungeon.setVisited(randomC, true);
+        }
+        return dungeon;
+    }
+
+    private HashMap<Coordinates,ArrayList<Region>> findAllSingleConnectors(Dungeon dungeon){
         HashMap<Coordinates,ArrayList<Region>> result = new HashMap<>();
         ArrayList<Region> temp;
         Coordinates c;
@@ -117,6 +127,8 @@ public class ConnectionGenerator {
         }
         return result;
     }
+
+
 
     private boolean regionsAreDifferent(Region r1, Region r2){
         if(r1 != null && r2 != null){

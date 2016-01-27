@@ -5,9 +5,13 @@ package generator.standard;
  */
 public interface Map {
 
-    public char getTile(int x, int y);
+    int BORDER = 1;
 
-    public int getWidthInTiles();
+    char getTile(int x, int y);
 
-    public int getHeightInTiles();
+    char getTile(Coordinates coords);
+
+    int getWidthInTiles();
+
+    int getHeightInTiles();
 }

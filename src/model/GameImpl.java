@@ -1,7 +1,9 @@
 package model;
 
-import generator.generators.DungeonGenerator;
+
+import generator.generators.dungeon.DungeonGenerator;
 import generator.standard.Map;
+import generator.standard.MapGenerator;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
@@ -13,7 +15,7 @@ public class GameImpl implements Game {
 
     private GameContainer gameContainer;
     private Player player;
-    private DungeonGenerator dungeonGenerator;
+    private MapGenerator dungeonGenerator;
     private Map map;
     private MapAdapter mapAdapter;
     private TileHandler tileHandler;
@@ -21,7 +23,7 @@ public class GameImpl implements Game {
     public GameImpl(GameContainer gameContainer) {
         this.gameContainer = gameContainer;
         this.dungeonGenerator = new DungeonGenerator();
-        this.map = dungeonGenerator.generateDungeon(30, 30);
+        this.map = dungeonGenerator.generateMap(30, 30);
         this.mapAdapter = new MapAdapter(map);
         this.tileHandler = new TileHandler(map);
         //test values for player

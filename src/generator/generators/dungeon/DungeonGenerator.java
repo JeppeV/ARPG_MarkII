@@ -1,28 +1,34 @@
-package generator.generators;
+package generator.generators.dungeon;
 
-import generator.standard.Constants;
+import generator.standard.MapGenerator;
+import generator.standard.TileType;
 import generator.standard.Dungeon;
 import generator.standard.Map;
 
-public class DungeonGenerator {
+public class DungeonGenerator implements MapGenerator {
 
     private RoomGenerator roomGenerator;
     private MazeGenerator mazeGenerator;
     private ConnectionGenerator connectionGenerator;
+    private DeadEndFiller deadEndFiller;
 
     public DungeonGenerator() {
         this.roomGenerator = new RoomGenerator();
         this.mazeGenerator = new MazeGenerator();
         this.connectionGenerator = new ConnectionGenerator();
+        this.deadEndFiller = new DeadEndFiller();
     }
 
-    public Map generateDungeon(int width, int height) {
+    @Override
+    public Map generateMap(int width, int height) {
         Dungeon dungeon = new Dungeon(width, height);
-        dungeon = fillDungeonWith(dungeon, Constants.WALL);
+        dungeon = fillDungeonWith(dungeon, TileType.WALL);
         dungeon = fillVisitedWith(dungeon, false);
         dungeon = roomGenerator.generateRooms(dungeon);
         dungeon = mazeGenerator.generateMazes(dungeon);
         dungeon = connectionGenerator.generateConnections(dungeon);
+        dungeon = deadEndFiller.fillDeadEnds(dungeon);
+
         return dungeon;
     }
 

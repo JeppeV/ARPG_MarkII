@@ -9,7 +9,8 @@ public class Dungeon implements Map {
     private boolean[][] visited;
     private ArrayList<Room> rooms;
     private ArrayList<Maze> mazes;
-    private HashMap<Coordinates,Region> regions;
+    private ArrayList<Region> regions;
+    private HashMap<Coordinates,Region> regionsMapping;
 
     public Dungeon(int width, int height) {
         this.width = width;
@@ -18,14 +19,16 @@ public class Dungeon implements Map {
         this.visited = new boolean[width][height];
         this.rooms = new ArrayList<>();
         this.mazes = new ArrayList<>();
-        this.regions = new HashMap<>();
+        this.regions = new ArrayList<>();
+        this.regionsMapping = new HashMap<>();
     }
 
     public void addMaze(Maze maze) {
         for(Coordinates c : maze.getTiles()){
-            regions.put(c, maze);
+            regionsMapping.put(c, maze);
         }
         mazes.add(maze);
+        regions.add(maze);
     }
 
     public ArrayList<Maze> mazes(){
@@ -34,28 +37,31 @@ public class Dungeon implements Map {
 
     public void addRoom(Room room) {
         for(Coordinates c : room.getTiles()){
-            regions.put(c, room);
+            regionsMapping.put(c, room);
         }
         rooms.add(room);
+        regions.add(room);
     }
 
     public ArrayList<Room> rooms() {
         return rooms;
     }
 
-    public Iterable<Region> getRegions(){
-        return regions.values();
+    public ArrayList<Region> getRegions(){
+        return regions;
     }
 
-    public Region getRegionAt(Coordinates coords){
-        return regions.get(coords);
-    }
-
-    public boolean[][] visited() {
-        return visited;
+    public Region getRegionAt(Coordinates coords) {
+        return regionsMapping.get(coords);
     }
 
     public void setVisited(int x, int y, boolean b) {
+        visited[x][y] = b;
+    }
+
+    public void setVisited(Coordinates coords, boolean b){
+        int x = coords.getX();
+        int y = coords.getY();
         visited[x][y] = b;
     }
 
@@ -63,12 +69,31 @@ public class Dungeon implements Map {
         return visited[x][y];
     }
 
+    public boolean getVisited(Coordinates coords){
+        int x = coords.getX();
+        int y = coords.getY();
+        return visited[x][y];
+    }
+
     public void setTile(int x, int y, char c) {
+        dungeon[x][y] = c;
+    }
+
+    public void setTile(Coordinates coords, char c){
+        int x = coords.getX();
+        int y = coords.getY();
         dungeon[x][y] = c;
     }
 
     @Override
     public char getTile(int x, int y) {
+        return dungeon[x][y];
+    }
+
+    @Override
+    public char getTile(Coordinates coords){
+        int x = coords.getX();
+        int y = coords.getY();
         return dungeon[x][y];
     }
 

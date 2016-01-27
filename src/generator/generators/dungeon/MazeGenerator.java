@@ -1,11 +1,10 @@
-package generator.generators;
+package generator.generators.dungeon;
 
-import generator.standard.Constants;
+import generator.standard.TileType;
 import generator.standard.Coordinates;
 import generator.standard.Dungeon;
 import generator.standard.Maze;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -24,14 +23,14 @@ public class MazeGenerator {
         Maze maze;
         ArrayList<Maze> mazes = new ArrayList<>();
         init(dungeon);
-        Coordinates coords = findNextEligibleInitialTile(dungeon);
-        while (coords != null) {
-            maze = generateMaze(dungeon, coords.getX(), coords.getY());
+        Coordinates eligibleInitialTile = findNextEligibleInitialTile(dungeon);
+        while (eligibleInitialTile != null) {
+            maze = generateMaze(dungeon, eligibleInitialTile.getX(), eligibleInitialTile.getY());
             dungeon.addMaze(maze);
             mazes.add(maze);
-            coords = findNextEligibleInitialTile(dungeon);
+            eligibleInitialTile = findNextEligibleInitialTile(dungeon);
         }
-        System.out.println("MazeGenerator succesfully created " + mazes.size() + " mazes.");
+        System.out.println("MazeGenerator successfully created " + mazes.size() + " mazes.");
         return dungeon;
 
     }
@@ -67,29 +66,26 @@ public class MazeGenerator {
         int x, y;
         while (!stack.isEmpty()) {
             coords = stack.pop();
-
             x = coords.getX();
             y = coords.getY();
-            if (dungeon.getVisited(x, y) || border[x][y]) {
+            if (dungeon.getVisited(coords) || border[x][y]) {
                 continue;
             }
-            if (isLegalTile(dungeon, x, y)) {
-                dungeon.setTile(x, y, Constants.FLOOR);
-                dungeon.setVisited(x, y, true);
+            if (isLegalTile(dungeon, coords)) {
+                dungeon.setTile(coords, TileType.FLOOR);
+                dungeon.setVisited(coords, true);
                 maze.addTile(new Coordinates(x, y));
-                stack = addNeighboursInRandomOrder(x, y, stack);
+                stack = addNeighboursInRandomOrder(coords, stack);
             }
         }
         return maze;
     }
 
-    private Stack<Coordinates> addNeighboursInRandomOrder(int x, int y, Stack<Coordinates> stack) {
+    private Stack<Coordinates> addNeighboursInRandomOrder(Coordinates coords, Stack<Coordinates> stack) {
         LinkedList<Coordinates> neighbours = new LinkedList<>();
-
-        neighbours.add(new Coordinates(x - 1, y));
-        neighbours.add(new Coordinates(x, y + 1));
-        neighbours.add(new Coordinates(x + 1, y));
-        neighbours.add(new Coordinates(x, y - 1));
+        for(Coordinates c : coords.getPrimeNeighbours()){
+            neighbours.add(c);
+        }
 
         for (int i = 4; i > 0; i--) {
             stack.add(neighbours.remove(random.nextInt(i)));
@@ -97,8 +93,8 @@ public class MazeGenerator {
         return stack;
     }
 
-    private boolean isLegalTile(Dungeon dungeon, int x, int y) {
-        Coordinates[] neighbours = getNeighbours(x, y);
+    private boolean isLegalTile(Dungeon dungeon, Coordinates coords) {
+        Coordinates[] neighbours = coords.getNeighbours();
         boolean result = true;
         for(int i = 0; i < 8; i += 2){
             result = result && isLegalTileFromDirection(dungeon, neighbours, i);
@@ -108,24 +104,22 @@ public class MazeGenerator {
 
     private boolean isLegalTileFromDirection(Dungeon dungeon, Coordinates[] neighbours, int i) {
         boolean result = true;
-        int x = neighbours[i].getX();
-        int y = neighbours[i].getY();
-        if (dungeon.getVisited(x, y)) {
+        if (dungeon.getVisited(neighbours[i])) {
             for (int j = i + 2; j < i + 7; j++) {
                 int n = j % 8;
-                x = neighbours[n].getX();
-                y = neighbours[n].getY();
-                result = result && (!dungeon.getVisited(x, y));
+                result = result && (!dungeon.getVisited(neighbours[n]));
             }
         }
         return result;
     }
 
-    private boolean isEligibleInitialTile(Dungeon dungeon, int x, int y) {
+    private boolean isEligibleInitialTile(Dungeon dungeon, Coordinates coords) {
         boolean result = true;
+        int x = coords.getX();
+        int y = coords.getY();
         int cX, cY;
         if (dungeon.getVisited(x, y) || border[x][y]) return false;
-        for (Coordinates c : getNeighbours(x, y)) {
+        for (Coordinates c : coords.getNeighbours()) {
             cX = c.getX();
             cY = c.getY();
             result = result && !dungeon.getVisited(cX, cY);
@@ -134,26 +128,16 @@ public class MazeGenerator {
     }
 
     private Coordinates findNextEligibleInitialTile(Dungeon dungeon) {
+        Coordinates res;
         for (int x = 0; x < dungeon.getWidthInTiles(); x++) {
             for (int y = 0; y < dungeon.getHeightInTiles(); y++) {
-                if (isEligibleInitialTile(dungeon, x, y)) return new Coordinates(x, y);
+                res = new Coordinates(x, y);
+                if (isEligibleInitialTile(dungeon, res)) return res;
             }
         }
         return null;
     }
 
-    private Coordinates[] getNeighbours(int x, int y) {
-        Coordinates[] neighbours = new Coordinates[8];
-        neighbours[0] = new Coordinates(x, y - 1);
-        neighbours[1] = new Coordinates(x + 1, y - 1);
-        neighbours[2] = new Coordinates(x + 1, y);
-        neighbours[3] = new Coordinates(x + 1, y + 1);
-        neighbours[4] = new Coordinates(x, y + 1);
-        neighbours[5] = new Coordinates(x - 1, y + 1);
-        neighbours[6] = new Coordinates(x - 1, y);
-        neighbours[7] = new Coordinates(x - 1, y - 1);
-        return neighbours;
-    }
 
 
 }
