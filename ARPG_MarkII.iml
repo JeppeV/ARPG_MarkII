@@ -56,6 +56,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="DungeonGenerator" />
+    <orderEntry type="module" module-name="MapGenerator" />
   </component>
 </module>

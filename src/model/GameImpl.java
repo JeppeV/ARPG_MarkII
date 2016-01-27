@@ -25,7 +25,7 @@ public class GameImpl implements Game {
     public GameImpl(GameContainer gameContainer) {
         this.gameContainer = gameContainer;
         this.dungeonGenerator = new DungeonGenerator();
-        this.map = dungeonGenerator.generateMap(30, 30);
+        this.map = dungeonGenerator.generateMap(50, 50);
         this.mapAdapter = new MapAdapter(map);
         this.tileHandler = new TileHandler(map);
         //test values for player
@@ -33,7 +33,6 @@ public class GameImpl implements Game {
         int gameContainerCenterY = gameContainer.getHeight() / 2;
         int playerWidth = 45, playerHeight = 45;
         this.player = new Player(gameContainerCenterX - (playerWidth / 2), gameContainerCenterY - (playerHeight / 2), playerWidth, playerHeight, this);
-
         player.addObserver(tileHandler);
 
 

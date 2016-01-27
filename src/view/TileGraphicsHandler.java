@@ -1,6 +1,6 @@
 package view;
 
-import generator.standard.Constants;
+import generator.standard.TileType;
 import model.Tile;
 import org.newdawn.slick.SlickException;
 
@@ -23,7 +23,7 @@ public class TileGraphicsHandler {
             for (int y = 0; y < tiles[0].length; y++) {
                 tile = tiles[x][y];
                 ref = "res/";
-                if (tile.getID() == Constants.FLOOR) {
+                if (tile.getID() == TileType.FLOOR) {
                     ref = ref + "floor0.png";
                 } else {
                     ref = ref + "wall0.png";
