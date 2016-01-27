@@ -17,7 +17,7 @@ public class PlayerController extends AbstractController {
 
     public PlayerController(Game game) {
         this.game = game;
-        this.player = (Player)game.getPlayer();
+        this.player = (Player) game.getPlayer();
     }
 
     @Override

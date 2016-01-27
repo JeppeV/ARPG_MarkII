@@ -1,6 +1,8 @@
 package model;
 
 
+
+
 import generator.generators.dungeon.DungeonGenerator;
 import generator.standard.Map;
 import generator.standard.MapGenerator;
@@ -30,7 +32,7 @@ public class GameImpl implements Game {
         int gameContainerCenterX = gameContainer.getWidth() / 2;
         int gameContainerCenterY = gameContainer.getHeight() / 2;
         int playerWidth = 45, playerHeight = 45;
-        this.player = new Player(gameContainerCenterX - (playerWidth/2), gameContainerCenterY - (playerHeight/2), playerWidth, playerHeight, this);
+        this.player = new Player(gameContainerCenterX - (playerWidth / 2), gameContainerCenterY - (playerHeight / 2), playerWidth, playerHeight, this);
 
         player.addObserver(tileHandler);
 
@@ -42,20 +44,20 @@ public class GameImpl implements Game {
         return player;
     }
 
-    public TileHandler getTileHandler(){
+    public TileHandler getTileHandler() {
         return tileHandler;
     }
 
-    public MapAdapter getMapAdapter(){
+    public MapAdapter getMapAdapter() {
         return mapAdapter;
     }
 
-    public GameContainer getGameContainer(){
+    public GameContainer getGameContainer() {
         return gameContainer;
     }
 
     @Override
-    public Tile[][] getTiles(){
+    public Tile[][] getTiles() {
         return tileHandler.getTiles();
     }
 

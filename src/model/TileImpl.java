@@ -15,22 +15,22 @@ public class TileImpl extends Rectangle implements Tile {
     }
 
     @Override
-    public float getX(){
+    public float getX() {
         return super.getX();
     }
 
     @Override
-    public float getY(){
+    public float getY() {
         return super.getY();
     }
 
     @Override
-    public float getWidth(){
+    public float getWidth() {
         return super.getWidth();
     }
 
     @Override
-    public float getHeight(){
+    public float getHeight() {
         return super.getHeight();
     }
 
@@ -41,7 +41,7 @@ public class TileImpl extends Rectangle implements Tile {
     }
 
     @Override
-    public String toString(){
-        return "Tile(" + (int)getX() + "," + (int)getY() + ")";
+    public String toString() {
+        return "Tile(" + (int) getX() + "," + (int) getY() + ")";
     }
 }

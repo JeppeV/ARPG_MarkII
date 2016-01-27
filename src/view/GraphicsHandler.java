@@ -2,9 +2,6 @@ package view;
 
 import model.Entity;
 import model.Game;
-import model.GameImpl;
-import model.Player;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;

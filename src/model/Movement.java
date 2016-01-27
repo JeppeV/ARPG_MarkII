@@ -7,28 +7,28 @@ import org.newdawn.slick.geom.Vector2f;
  */
 public abstract class Movement {
 
-    public static boolean isMovingUp(Vector2f velocity){
+    public static boolean isMovingUp(Vector2f velocity) {
         double angle = velocity.getTheta();
-        if(angle > 180 && angle < 360) return true;
+        if (angle > 180 && angle < 360) return true;
         return false;
     }
 
-    public static boolean isMovingRight(Vector2f velocity){
+    public static boolean isMovingRight(Vector2f velocity) {
         double angle = velocity.getTheta();
-        if(angle >= 0 && angle < 90) return true;
-        if(angle <= 360 && angle > 270) return true;
+        if (angle >= 0 && angle < 90) return true;
+        if (angle <= 360 && angle > 270) return true;
         return false;
     }
 
-    public static boolean isMovingDown(Vector2f velocity){
+    public static boolean isMovingDown(Vector2f velocity) {
         double angle = velocity.getTheta();
-        if(angle > 0 && angle < 180) return true;
+        if (angle > 0 && angle < 180) return true;
         return false;
     }
 
-    public static boolean isMovingLeft(Vector2f velocity){
+    public static boolean isMovingLeft(Vector2f velocity) {
         double angle = velocity.getTheta();
-        if(angle < 270 && angle > 90) return true;
+        if (angle < 270 && angle > 90) return true;
         return false;
     }
 
