@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import slick.framework.Main;
+import slick.framework.MainGame;
 
 
 /**
@@ -15,9 +15,9 @@ public class TestRun {
     @Test
     public void test() {
         try {
-            AppGameContainer app = new AppGameContainer(new Main());
-            app.setDisplayMode(1300, 600, false);
+            AppGameContainer app = new AppGameContainer(new MainGame());
             Input.disableControllers();
+            app.setDisplayMode(1300, 600, false);
             app.setVSync(true);
             app.setTargetFrameRate(60);
             app.setMinimumLogicUpdateInterval(10);

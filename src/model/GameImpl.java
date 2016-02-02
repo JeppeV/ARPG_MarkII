@@ -1,8 +1,6 @@
 package model;
 
 
-
-
 import generator.generators.dungeon.DungeonGenerator;
 import generator.standard.Map;
 import generator.standard.MapGenerator;
@@ -17,17 +15,18 @@ public class GameImpl implements Game {
 
     private GameContainer gameContainer;
     private Player player;
-    private MapGenerator dungeonGenerator;
+    private MapGenerator mapGenerator;
     private Map map;
     private MapAdapter mapAdapter;
     private TileHandler tileHandler;
 
     public GameImpl(GameContainer gameContainer) {
         this.gameContainer = gameContainer;
-        this.dungeonGenerator = new DungeonGenerator();
-        this.map = dungeonGenerator.generateMap(50, 50);
+        this.mapGenerator = new DungeonGenerator();
+        this.map = mapGenerator.generateMap(50, 50);
         this.mapAdapter = new MapAdapter(map);
         this.tileHandler = new TileHandler(map);
+
         //test values for player
         int gameContainerCenterX = gameContainer.getWidth() / 2;
         int gameContainerCenterY = gameContainer.getHeight() / 2;
@@ -45,10 +44,6 @@ public class GameImpl implements Game {
 
     public TileHandler getTileHandler() {
         return tileHandler;
-    }
-
-    public MapAdapter getMapAdapter() {
-        return mapAdapter;
     }
 
     public GameContainer getGameContainer() {

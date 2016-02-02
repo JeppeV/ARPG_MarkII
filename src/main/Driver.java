@@ -3,7 +3,7 @@ package main;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import slick.framework.Main;
+import slick.framework.MainGame;
 
 /**
  * Created by Jeppe Vinberg on 17-01-2016.
@@ -12,7 +12,7 @@ public class Driver {
 
     public static void main(String[] args) {
         try {
-            AppGameContainer app = new AppGameContainer(new Main());
+            AppGameContainer app = new AppGameContainer(new MainGame());
             app.setDisplayMode(1300, 600, false);
             Input.disableControllers();
             app.setVSync(true);

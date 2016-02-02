@@ -32,8 +32,13 @@ public class TileHandler implements Observer {
         return tiles;
     }
 
+
     public Tile[][] getTiles() {
         return tiles;
+    }
+
+    public Tile getTile(int x, int y) {
+        return tiles[x][y];
     }
 
     public float getXOffset() {
