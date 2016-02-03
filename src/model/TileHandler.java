@@ -1,6 +1,8 @@
 package model;
 
 import generator.standard.Map;
+import generator.standard.TileType;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Observable;

@@ -60,7 +60,7 @@ public class Player extends Observable implements Entity {
     }
 
     @Override
-    public Rectangle getCollisionRectangle() {
+    public Rectangle getCollisionBox() {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
@@ -91,16 +91,6 @@ public class Player extends Observable implements Entity {
         return position.getY();
     }
 
-    //temp
-    public float getGlobalCenteredX() {
-        return position.getX() + tileHandler.getXOffset() + getWidth() / 2;
-    }
-
-    //temp
-    public float getGlobalCenteredY() {
-        return position.getY() + tileHandler.getYOffset() + getHeight() / 2;
-    }
-
     @Override
     public int getWidth() {
         return width;
@@ -110,6 +100,8 @@ public class Player extends Observable implements Entity {
     public int getHeight() {
         return height;
     }
+
+
 
 
     @Override
@@ -144,17 +136,11 @@ public class Player extends Observable implements Entity {
             velocity = slowdown(velocity);
         }
 
-        move(velocity);
-
-
-    }
-
-    private void move(Vector2f velocity) {
         //splitting velocity vector into X and Y components
         Vector2f velocityX = new Vector2f(velocity.getX(), 0);
         Vector2f velocityY = new Vector2f(0, velocity.getY());
 
-        //add X velocity
+        //if not colliding on X axis, add X velocity
         if (!tileCollision(position.copy().add(velocityX))) {
             if (intersectsOffsetBoundLeftOrRight()) {
                 position.add(velocityX);
@@ -165,9 +151,8 @@ public class Player extends Observable implements Entity {
                 position.add(velocityX);
             }
         }
-
+        //if not colliding on Y axis, add Y velocity
         if (!tileCollision(position.copy().add(velocityY))) {
-            //add Y velocity
             if (intersectsOffsetBoundTopOrBottom()) {
                 position.add(velocityY);
             } else if (intersectsMovementBoxTopOrBottom()) {
@@ -179,11 +164,14 @@ public class Player extends Observable implements Entity {
         }
 
 
+
+
     }
+
 
     private boolean tileCollision(Vector2f prediction) {
         Rectangle r = new Rectangle(prediction.getX(), prediction.getY(), getWidth(), getHeight());
-        
+
         //development
         if (!checkCollision) return false;
 

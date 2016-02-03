@@ -19,5 +19,5 @@ public interface Entity {
 
     void update(GameContainer gameContainer, int delta);
 
-    Rectangle getCollisionRectangle();
+    Rectangle getCollisionBox();
 }

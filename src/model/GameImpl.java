@@ -12,7 +12,6 @@ import org.newdawn.slick.SlickException;
  */
 public class GameImpl implements Game {
 
-
     private GameContainer gameContainer;
     private Player player;
     private MapGenerator mapGenerator;

@@ -1,5 +1,6 @@
 package main;
 
+import generator.generators.dungeon.DungeonGenerator;
 import org.junit.Test;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Input;
