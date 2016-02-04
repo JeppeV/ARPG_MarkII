@@ -1,9 +1,6 @@
 package slick.framework;
 
-import controller.DevelopmentController;
-import controller.PlayerController;
 import model.Game;
-import model.GameImpl;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 import view.GraphicsHandler;

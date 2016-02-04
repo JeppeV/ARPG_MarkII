@@ -12,11 +12,11 @@ import java.util.Observable;
  */
 public class Player extends Observable implements Entity {
 
-    private GameImpl game;
     private GameContainer gameContainer;
-    private Rectangle movementBox;
     private TileHandler tileHandler;
-    private Vector2f position, velocity;
+    private MapAdapter mapAdapter;
+    private Rectangle movementBox;
+    private Vector2f localPosition, globalPosition, velocity;
     private float moveSpeed, maxSpeed, moveThreshold, moveSlowndownFactor;
     private int width, height;
     private boolean right, left, up, down;
@@ -27,18 +27,19 @@ public class Player extends Observable implements Entity {
 
 
     public Player(int x, int y, int width, int height, GameImpl game) {
-        this.game = game;
-        this.tileHandler = game.getTileHandler();
         this.gameContainer = game.getGameContainer();
-        this.movementBox = initMovementBox(175);
-        this.position = new Vector2f(x, y);
-        this.velocity = new Vector2f(0, 0);
-        this.width = width;
-        this.height = height;
-        this.right = this.left = this.up = this.down = false;
+        this.tileHandler = game.getTileHandler();
+        this.mapAdapter = game.getMapAdapter();
         this.leftOffsetBound = this.topOffsetBound = 0;
         this.rightOffsetBound = tileHandler.getTiles().length * Tile.WIDTH - gameContainer.getWidth();
         this.bottomOffsetBound = tileHandler.getTiles()[0].length * Tile.HEIGHT - gameContainer.getHeight();
+        this.movementBox = initMovementBox(175);
+        this.localPosition = initPosition(x, y);
+        this.velocity = new Vector2f(0, 0);
+        this.globalPosition = new Vector2f(x, y);
+        this.width = width;
+        this.height = height;
+        this.right = this.left = this.up = this.down = false;
         this.moveSpeed = 0.2f;
         this.maxSpeed = 5;
         this.moveThreshold = 0.0001f;
@@ -46,6 +47,24 @@ public class Player extends Observable implements Entity {
 
         //development
         this.checkCollision = true;
+
+    }
+
+    private Vector2f initPosition(int x, int y){
+        Rectangle bounds = new Rectangle(0, 0, mapAdapter.getWidthInPixels(), mapAdapter.getHeightInPixels());
+        Vector2f localPosition = new Vector2f(x, y);
+        if(!bounds.contains(x, y)) throw new IllegalStateException("Player position is outside of world bounds");
+        float dX = x - movementBox.getCenterX();
+        float dY = y - movementBox.getCenterY();
+        Vector2f v = new Vector2f(dX, dY);
+        if(!intersectsOffsetBoundLeftOrRight(v)){
+            tileHandler.changeTilesOffset(dX, 0);
+        }
+        if(!intersectsOffsetBoundTopOrBottom(v)){
+            tileHandler.changeTilesOffset(0, dY);
+        }
+        localPosition.add(v.negate());
+        return localPosition;
 
     }
 
@@ -83,12 +102,22 @@ public class Player extends Observable implements Entity {
 
     @Override
     public float getX() {
-        return position.getX();
+        return localPosition.getX();
     }
 
     @Override
     public float getY() {
-        return position.getY();
+        return localPosition.getY();
+    }
+
+    @Override
+    public float getGlobalX() {
+        return globalPosition.getX();
+    }
+
+    @Override
+    public float getGlobalY() {
+        return globalPosition.getY();
     }
 
     @Override
@@ -111,7 +140,6 @@ public class Player extends Observable implements Entity {
 
     private void updateMovement(int delta) {
         float x = 0, y = 0;
-
         if (right) {
             x += moveSpeed;
         }
@@ -141,26 +169,30 @@ public class Player extends Observable implements Entity {
         Vector2f velocityY = new Vector2f(0, velocity.getY());
 
         //if not colliding on X axis, add X velocity
-        if (!tileCollision(position.copy().add(velocityX))) {
-            if (intersectsOffsetBoundLeftOrRight()) {
-                position.add(velocityX);
+        if (!tileCollision(localPosition.copy().add(velocityX))) {
+            if (intersectsOffsetBoundLeftOrRight(velocity)) {
+                localPosition.add(velocityX);
             } else if (intersectsMovementBoxLeftOrRight()) {
+                //notify tile handler to change xOffset
                 setChanged();
                 notifyObservers(velocityX);
             } else {
-                position.add(velocityX);
+                localPosition.add(velocityX);
             }
+            globalPosition.add(velocityX);
         }
         //if not colliding on Y axis, add Y velocity
-        if (!tileCollision(position.copy().add(velocityY))) {
-            if (intersectsOffsetBoundTopOrBottom()) {
-                position.add(velocityY);
+        if (!tileCollision(localPosition.copy().add(velocityY))) {
+            if (intersectsOffsetBoundTopOrBottom(velocity)) {
+                localPosition.add(velocityY);
             } else if (intersectsMovementBoxTopOrBottom()) {
+                //notify tile handler to change yOffset
                 setChanged();
                 notifyObservers(velocityY);
             } else {
-                position.add(velocityY);
+                localPosition.add(velocityY);
             }
+            globalPosition.add(velocityY);
         }
 
 
@@ -185,14 +217,14 @@ public class Player extends Observable implements Entity {
     }
 
 
-    private boolean intersectsOffsetBoundLeftOrRight() {
+    private boolean intersectsOffsetBoundLeftOrRight(Vector2f velocity) {
         if (((tileHandler.getXOffset() <= leftOffsetBound) && Movement.isMovingLeft(velocity)) || ((tileHandler.getXOffset() >= rightOffsetBound) && Movement.isMovingRight(velocity))) {
             return true;
         }
         return false;
     }
 
-    private boolean intersectsOffsetBoundTopOrBottom() {
+    private boolean intersectsOffsetBoundTopOrBottom(Vector2f velocity) {
         if (((tileHandler.getYOffset() <= topOffsetBound) && Movement.isMovingUp(velocity)) || ((tileHandler.getYOffset() >= bottomOffsetBound) && Movement.isMovingDown(velocity))) {
             return true;
         }
@@ -203,7 +235,7 @@ public class Player extends Observable implements Entity {
         float x1 = movementBox.getX();
         float x2 = movementBox.getX() + movementBox.getWidth();
 
-        if (((position.getX() <= x1) && Movement.isMovingLeft(velocity)) || ((position.getX() >= x2) && Movement.isMovingRight(velocity))) {
+        if (((localPosition.getX() <= x1) && Movement.isMovingLeft(velocity)) || ((localPosition.getX() >= x2) && Movement.isMovingRight(velocity))) {
             return true;
         }
         return false;
@@ -213,7 +245,7 @@ public class Player extends Observable implements Entity {
         float y1 = movementBox.getY();
         float y2 = movementBox.getY() + movementBox.getHeight();
 
-        if (((position.getY() <= y1) && Movement.isMovingUp(velocity)) || ((position.getY() >= y2) && Movement.isMovingDown(velocity))) {
+        if (((localPosition.getY() <= y1) && Movement.isMovingUp(velocity)) || ((localPosition.getY() >= y2) && Movement.isMovingDown(velocity))) {
             return true;
         }
         return false;

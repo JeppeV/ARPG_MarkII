@@ -11,7 +11,7 @@ import java.util.Observer;
 /**
  * Created by Jeppe Vinberg on 18-01-2016.
  */
-public class TileHandler implements Observer {
+public class TileHandler extends Observable implements Observer {
 
     private TileImpl[][] tiles;
     private float xOffset, yOffset;
@@ -35,6 +35,7 @@ public class TileHandler implements Observer {
     }
 
 
+
     public Tile[][] getTiles() {
         return tiles;
     }
@@ -51,7 +52,7 @@ public class TileHandler implements Observer {
         return yOffset;
     }
 
-    private void changeTilesOffset(float xOffset, float yOffset) {
+    public void changeTilesOffset(float xOffset, float yOffset) {
         TileImpl tile;
         this.xOffset += xOffset;
         this.yOffset += yOffset;
@@ -64,6 +65,9 @@ public class TileHandler implements Observer {
             }
 
         }
+
+        setChanged();
+        notifyObservers(new Vector2f(xOffset, yOffset));
     }
 
     @Override

@@ -13,6 +13,10 @@ public interface Entity {
 
     float getY();
 
+    float getGlobalX();
+
+    float getGlobalY();
+
     int getWidth();
 
     int getHeight();

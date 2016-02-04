@@ -27,10 +27,8 @@ public class GameImpl implements Game {
         this.tileHandler = new TileHandler(map);
 
         //test values for player
-        int gameContainerCenterX = gameContainer.getWidth() / 2;
-        int gameContainerCenterY = gameContainer.getHeight() / 2;
         int playerWidth = 45, playerHeight = 45;
-        this.player = new Player(gameContainerCenterX - (playerWidth / 2), gameContainerCenterY - (playerHeight / 2), playerWidth, playerHeight, this);
+        this.player = new Player(1200, 1400, playerWidth, playerHeight, this);
         player.addObserver(tileHandler);
 
 
@@ -47,6 +45,10 @@ public class GameImpl implements Game {
 
     public GameContainer getGameContainer() {
         return gameContainer;
+    }
+
+    public MapAdapter getMapAdapter(){
+        return mapAdapter;
     }
 
     @Override
