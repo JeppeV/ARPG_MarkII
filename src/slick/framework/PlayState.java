@@ -2,7 +2,7 @@ package slick.framework;
 
 import controller.DevelopmentController;
 import controller.PlayerController;
-import model.Game;
+import model.facade.Game;
 import model.GameImpl;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -28,22 +28,25 @@ public class PlayState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+        //model
         game = new GameImpl(gameContainer);
+        //view
+        graphicsHandler = new GraphicsHandler(game);
+        //controllers
         listeners.add(new PlayerController(game));
         listeners.add(new DevelopmentController(game));
         Input input = gameContainer.getInput();
         listeners.forEach(input::addListener);
-        graphicsHandler = new GraphicsHandler(game);
-    }
-
-    @Override
-    public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
-        graphicsHandler.render(graphics);
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
         game.update(gameContainer, i);
+    }
+
+    @Override
+    public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
+        graphicsHandler.render(graphics);
     }
 
     @Override

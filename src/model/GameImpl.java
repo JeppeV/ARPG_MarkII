@@ -4,6 +4,12 @@ package model;
 import generator.generators.dungeon.DungeonGenerator;
 import generator.standard.Map;
 import generator.standard.MapGenerator;
+import model.facade.Entity;
+import model.entities.EntityHandler;
+import model.entities.Player;
+import model.facade.Game;
+import model.facade.Tile;
+import model.tiles.TileHandler;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 

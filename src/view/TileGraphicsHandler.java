@@ -1,7 +1,7 @@
 package view;
 
 import generator.standard.TileType;
-import model.Tile;
+import model.facade.Tile;
 import org.newdawn.slick.SlickException;
 
 /**

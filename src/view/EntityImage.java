@@ -1,7 +1,7 @@
 package view;
 
 
-import model.Entity;
+import model.facade.Entity;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 

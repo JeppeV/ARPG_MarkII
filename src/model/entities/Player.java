@@ -1,6 +1,11 @@
-package model;
+package model.entities;
 
 import generator.standard.TileType;
+import model.*;
+import model.facade.Entity;
+import model.facade.Tile;
+import model.tiles.TileHandler;
+import model.tiles.TileImpl;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;

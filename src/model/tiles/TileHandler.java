@@ -1,6 +1,7 @@
-package model;
+package model.tiles;
 
 import generator.standard.Map;
+import model.facade.Tile;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Observable;

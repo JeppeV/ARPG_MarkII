@@ -1,5 +1,6 @@
-package model;
+package model.facade;
 
+import model.entities.Player;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 

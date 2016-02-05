@@ -1,4 +1,4 @@
-package model;
+package model.facade;
 
 /**
  * Created by Jeppe Vinberg on 18-01-2016.

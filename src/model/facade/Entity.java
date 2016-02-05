@@ -1,4 +1,4 @@
-package model;
+package model.facade;
 
 
 import org.newdawn.slick.GameContainer;

@@ -2,7 +2,7 @@ package model;
 
 import generator.standard.Map;
 import generator.standard.TileType;
-import org.newdawn.slick.GameContainer;
+import model.facade.Tile;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
