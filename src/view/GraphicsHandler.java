@@ -1,9 +1,7 @@
 package view;
 
-import model.Entity;
 import model.Game;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -11,24 +9,18 @@ import org.newdawn.slick.SlickException;
  */
 public class GraphicsHandler {
 
-    private Game game;
-    private Image playerImage;
     private TileGraphicsHandler tileGraphicsHandler;
+    private EntityGraphicsHandler entityGraphicsHandler;
 
     public GraphicsHandler(Game game) throws SlickException {
-        this.game = game;
         this.tileGraphicsHandler = new TileGraphicsHandler(game.getTiles());
-        initPlayer();
+        this.entityGraphicsHandler = new EntityGraphicsHandler(game);
     }
 
-    private void initPlayer() throws SlickException {
-        Entity player = game.getPlayer();
-        playerImage = new PlayerImage(player);
-    }
 
     public void render(Graphics graphics) throws SlickException {
         tileGraphicsHandler.render();
-        playerImage.draw();
+        entityGraphicsHandler.render();
 
     }
 }

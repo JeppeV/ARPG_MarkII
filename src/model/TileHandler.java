@@ -1,8 +1,6 @@
 package model;
 
 import generator.standard.Map;
-import generator.standard.TileType;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Observable;
@@ -11,15 +9,11 @@ import java.util.Observer;
 /**
  * Created by Jeppe Vinberg on 18-01-2016.
  */
-public class TileHandler extends Observable implements Observer {
+public class TileHandler implements Observer {
 
     private TileImpl[][] tiles;
-    private float xOffset, yOffset;
 
     public TileHandler(Map map) {
-        //temporary initial values for offset
-        this.xOffset = 0.0f;
-        this.yOffset = 0.0f;
         this.tiles = initTiles(map);
     }
 
@@ -35,7 +29,6 @@ public class TileHandler extends Observable implements Observer {
     }
 
 
-
     public Tile[][] getTiles() {
         return tiles;
     }
@@ -44,39 +37,22 @@ public class TileHandler extends Observable implements Observer {
         return tiles[x][y];
     }
 
-    public float getXOffset() {
-        return xOffset;
-    }
-
-    public float getYOffset() {
-        return yOffset;
-    }
-
-    public void changeTilesOffset(float xOffset, float yOffset) {
+    private void changeTilesOffset(float xOffset, float yOffset) {
         TileImpl tile;
-        this.xOffset += xOffset;
-        this.yOffset += yOffset;
-        //System.out.println("xOffset: " + this.xOffset + ", yOffset: " + this.yOffset);
         for (int x = 0; x < tiles.length; x++) {
             for (int y = 0; y < tiles[0].length; y++) {
                 tile = tiles[x][y];
                 tile.setX(tile.getX() - xOffset);
                 tile.setY(tile.getY() - yOffset);
             }
-
         }
-
-        setChanged();
-        notifyObservers(new Vector2f(xOffset, yOffset));
     }
 
     @Override
     public void update(Observable o, Object arg) {
         Vector2f v = (Vector2f) arg;
-        float x = v.getX();
-        float y = v.getY();
-        if (!(x == 0f && y == 0f)) {
-            changeTilesOffset(x, y);
+        if (v.length() != 0) {
+            changeTilesOffset(v.getX(), v.getY());
         }
     }
 }

@@ -6,7 +6,6 @@ import model.Game;
 import model.GameImpl;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
-import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 import view.GraphicsHandler;
 
@@ -48,7 +47,7 @@ public class PlayState extends BasicGameState {
     }
 
     @Override
-    public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame){
+    public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) {
         Input input = gameContainer.getInput();
         listeners.forEach(input::removeListener);
 

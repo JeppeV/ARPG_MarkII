@@ -19,16 +19,12 @@ public class MapAdapter implements TileBasedMap {
         this.pathFinderVisited = new boolean[map.getWidthInTiles()][map.getHeightInTiles()];
     }
 
-    public void update(GameContainer gameContainer, int delta) {
-
-    }
-
     @Override
     public int getWidthInTiles() {
         return map.getWidthInTiles();
     }
 
-    public int getWidthInPixels(){
+    public int getWidthInPixels() {
         return map.getWidthInTiles() * Tile.WIDTH;
     }
 
@@ -37,7 +33,7 @@ public class MapAdapter implements TileBasedMap {
         return map.getHeightInTiles();
     }
 
-    public int getHeightInPixels(){
+    public int getHeightInPixels() {
         return map.getHeightInTiles() * Tile.HEIGHT;
     }
 

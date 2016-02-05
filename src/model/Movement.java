@@ -1,5 +1,7 @@
 package model;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
@@ -30,6 +32,12 @@ public abstract class Movement {
         double angle = velocity.getTheta();
         if (angle < 270 && angle > 90) return true;
         return false;
+    }
+
+    public static Rectangle getMovementBox(GameContainer gameContainer, int size){
+        float movementBoxWidth = size * gameContainer.getAspectRatio();
+        float movementBoxHeight = size;
+        return new Rectangle((gameContainer.getWidth() / 2) - (movementBoxWidth / 2), (gameContainer.getHeight() / 2) - (movementBoxHeight / 2), movementBoxWidth, movementBoxHeight);
     }
 
 }

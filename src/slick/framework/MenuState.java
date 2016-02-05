@@ -2,11 +2,8 @@ package slick.framework;
 
 import controller.MenuController;
 import org.newdawn.slick.*;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.geom.*;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
-
 import org.newdawn.slick.state.StateBasedGame;
 
 

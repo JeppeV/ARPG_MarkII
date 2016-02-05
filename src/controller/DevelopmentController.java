@@ -14,7 +14,7 @@ public class DevelopmentController extends AbstractController {
 
     public DevelopmentController(Game game) {
         this.game = game;
-        this.player = (Player) game.getPlayer();
+        this.player = game.getPlayer();
     }
 
     @Override

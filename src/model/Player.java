@@ -5,16 +5,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
-import java.util.Observable;
-
 /**
  * Created by Jeppe Vinberg on 15-01-2016.
  */
-public class Player extends Observable implements Entity {
+public class Player implements Entity {
 
     private GameContainer gameContainer;
+    private OffsetHandler offsetHandler;
     private TileHandler tileHandler;
-    private MapAdapter mapAdapter;
     private Rectangle movementBox;
     private Vector2f localPosition, globalPosition, velocity;
     private float moveSpeed, maxSpeed, moveThreshold, moveSlowndownFactor;
@@ -23,18 +21,18 @@ public class Player extends Observable implements Entity {
     private float leftOffsetBound, topOffsetBound, rightOffsetBound, bottomOffsetBound;
 
     //development
-    private boolean checkCollision;
+    private boolean checkCollision = true;
 
 
     public Player(int x, int y, int width, int height, GameImpl game) {
         this.gameContainer = game.getGameContainer();
-        this.tileHandler = game.getTileHandler();
-        this.mapAdapter = game.getMapAdapter();
+        this.offsetHandler = game.getOffsetHandler();
         this.leftOffsetBound = this.topOffsetBound = 0;
+        this.tileHandler = game.getTileHandler();
         this.rightOffsetBound = tileHandler.getTiles().length * Tile.WIDTH - gameContainer.getWidth();
         this.bottomOffsetBound = tileHandler.getTiles()[0].length * Tile.HEIGHT - gameContainer.getHeight();
-        this.movementBox = initMovementBox(175);
-        this.localPosition = initPosition(x, y);
+        this.movementBox = Movement.getMovementBox(gameContainer, 175);
+        this.localPosition = initPosition(x, y, game.getMapAdapter());
         this.velocity = new Vector2f(0, 0);
         this.globalPosition = new Vector2f(x, y);
         this.width = width;
@@ -45,23 +43,21 @@ public class Player extends Observable implements Entity {
         this.moveThreshold = 0.0001f;
         this.moveSlowndownFactor = 0.75f;
 
-        //development
-        this.checkCollision = true;
 
     }
 
-    private Vector2f initPosition(int x, int y){
+    private Vector2f initPosition(int x, int y, MapAdapter mapAdapter) {
         Rectangle bounds = new Rectangle(0, 0, mapAdapter.getWidthInPixels(), mapAdapter.getHeightInPixels());
         Vector2f localPosition = new Vector2f(x, y);
-        if(!bounds.contains(x, y)) throw new IllegalStateException("Player position is outside of world bounds");
+        if (!bounds.contains(x, y)) throw new IllegalStateException("Player position is outside of world bounds");
         float dX = x - movementBox.getCenterX();
         float dY = y - movementBox.getCenterY();
         Vector2f v = new Vector2f(dX, dY);
-        if(!intersectsOffsetBoundLeftOrRight(v)){
-            tileHandler.changeTilesOffset(dX, 0);
+        if (!intersectsOffsetBoundLeftOrRight(v)) {
+            offsetHandler.changeOffset(dX, 0);
         }
-        if(!intersectsOffsetBoundTopOrBottom(v)){
-            tileHandler.changeTilesOffset(0, dY);
+        if (!intersectsOffsetBoundTopOrBottom(v)) {
+            offsetHandler.changeOffset(0, dY);
         }
         localPosition.add(v.negate());
         return localPosition;
@@ -70,12 +66,6 @@ public class Player extends Observable implements Entity {
 
     public void toggleCollisionCheck() {
         checkCollision = !checkCollision;
-    }
-
-    private Rectangle initMovementBox(float size) {
-        float movementBoxWidth = size * gameContainer.getAspectRatio();
-        float movementBoxHeight = size;
-        return new Rectangle((gameContainer.getWidth() / 2) - (movementBoxWidth / 2), (gameContainer.getHeight() / 2) - (movementBoxHeight / 2), movementBoxWidth, movementBoxHeight);
     }
 
     @Override
@@ -111,13 +101,18 @@ public class Player extends Observable implements Entity {
     }
 
     @Override
-    public float getGlobalX() {
-        return globalPosition.getX();
+    public void setX(float x) {
+        localPosition.set(x, localPosition.getY());
     }
 
     @Override
-    public float getGlobalY() {
-        return globalPosition.getY();
+    public void setY(float y) {
+        localPosition.set(localPosition.getX(), y);
+    }
+
+    @Override
+    public int getID() {
+        return EntityID.PLAYER;
     }
 
     @Override
@@ -129,9 +124,6 @@ public class Player extends Observable implements Entity {
     public int getHeight() {
         return height;
     }
-
-
-
 
     @Override
     public void update(GameContainer gameContainer, int delta) {
@@ -154,6 +146,7 @@ public class Player extends Observable implements Entity {
         }
 
         Vector2f force = new Vector2f(x, y);
+        //scale with delta
         force.scale(delta);
         if ((velocity.length() < maxSpeed)) {
             velocity.add(force);
@@ -173,9 +166,7 @@ public class Player extends Observable implements Entity {
             if (intersectsOffsetBoundLeftOrRight(velocity)) {
                 localPosition.add(velocityX);
             } else if (intersectsMovementBoxLeftOrRight()) {
-                //notify tile handler to change xOffset
-                setChanged();
-                notifyObservers(velocityX);
+                offsetHandler.changeOffset(velocityX);
             } else {
                 localPosition.add(velocityX);
             }
@@ -186,16 +177,12 @@ public class Player extends Observable implements Entity {
             if (intersectsOffsetBoundTopOrBottom(velocity)) {
                 localPosition.add(velocityY);
             } else if (intersectsMovementBoxTopOrBottom()) {
-                //notify tile handler to change yOffset
-                setChanged();
-                notifyObservers(velocityY);
+                offsetHandler.changeOffset(velocityY);
             } else {
                 localPosition.add(velocityY);
             }
             globalPosition.add(velocityY);
         }
-
-
 
 
     }
@@ -218,14 +205,14 @@ public class Player extends Observable implements Entity {
 
 
     private boolean intersectsOffsetBoundLeftOrRight(Vector2f velocity) {
-        if (((tileHandler.getXOffset() <= leftOffsetBound) && Movement.isMovingLeft(velocity)) || ((tileHandler.getXOffset() >= rightOffsetBound) && Movement.isMovingRight(velocity))) {
+        if (((offsetHandler.getXOffset() <= leftOffsetBound) && Movement.isMovingLeft(velocity)) || ((offsetHandler.getXOffset() >= rightOffsetBound) && Movement.isMovingRight(velocity))) {
             return true;
         }
         return false;
     }
 
     private boolean intersectsOffsetBoundTopOrBottom(Vector2f velocity) {
-        if (((tileHandler.getYOffset() <= topOffsetBound) && Movement.isMovingUp(velocity)) || ((tileHandler.getYOffset() >= bottomOffsetBound) && Movement.isMovingDown(velocity))) {
+        if (((offsetHandler.getYOffset() <= topOffsetBound) && Movement.isMovingUp(velocity)) || ((offsetHandler.getYOffset() >= bottomOffsetBound) && Movement.isMovingDown(velocity))) {
             return true;
         }
         return false;

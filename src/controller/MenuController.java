@@ -1,10 +1,8 @@
 package controller;
 
 import org.newdawn.slick.Input;
-import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
-import org.omg.PortableServer.POAManagerPackage.State;
 import slick.framework.MainGame;
 
 /**
@@ -15,7 +13,7 @@ public class MenuController extends AbstractController {
     private StateBasedGame stateBasedGame;
     private Rectangle playButton;
 
-    public MenuController(StateBasedGame stateBasedGame, Rectangle playButton){
+    public MenuController(StateBasedGame stateBasedGame, Rectangle playButton) {
         this.stateBasedGame = stateBasedGame;
         this.playButton = playButton;
     }
@@ -47,7 +45,7 @@ public class MenuController extends AbstractController {
 
     @Override
     public void mouseReleased(int i, int x, int y) {
-        if(playButton.contains(x, y)){
+        if (playButton.contains(x, y)) {
             stateBasedGame.enterState(MainGame.playStateID);
         }
 
