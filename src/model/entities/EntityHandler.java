@@ -54,5 +54,4 @@ public class EntityHandler implements Observer {
         }
     }
 
-
 }

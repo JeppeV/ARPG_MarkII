@@ -1,9 +1,11 @@
 package model;
 
 
+import generator.generators.cave.CaveGenerator;
 import generator.generators.dungeon.DungeonGenerator;
 import generator.standard.Map;
 import generator.standard.MapGenerator;
+import model.entities.GruntEnemy;
 import model.facade.Entity;
 import model.entities.EntityHandler;
 import model.entities.Player;
@@ -33,7 +35,7 @@ public class GameImpl implements Game {
     public GameImpl(GameContainer gameContainer) {
         this.gameContainer = gameContainer;
         this.mapGenerator = new DungeonGenerator();
-        this.map = mapGenerator.generateMap(50, 50);
+        this.map = mapGenerator.generateMap(100, 20);
         this.mapAdapter = new MapAdapter(map);
         this.offsetHandler = new OffsetHandler();
         this.tileHandler = new TileHandler(map);
@@ -43,11 +45,14 @@ public class GameImpl implements Game {
 
         //test values for player
         int playerWidth = 45, playerHeight = 45;
-        this.player = new Player(1200, 1400, playerWidth, playerHeight, this);
+        this.player = new Player(10, 10, playerWidth, playerHeight, this);
+        entityHandler.add(new GruntEnemy(1250, 1450, this));
         entityHandler.add(player);
 
 
     }
+
+    public EntityHandler getEntityHandler() { return entityHandler; }
 
     public TileHandler getTileHandler() {
         return tileHandler;

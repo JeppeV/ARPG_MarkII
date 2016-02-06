@@ -25,11 +25,11 @@ public class EntityGraphicsHandler {
         String ref;
         for (Entity e : entities) {
             ref = "res/";
-            if (e.getID() == EntityID.PLAYER) {
+            //if (e.getID() == EntityID.PLAYER) {
                 //player
                 ref = ref + "player.png";
                 entityImages.add(new EntityImage(ref, e));
-            }
+            //}
             //... other cases
         }
         return entityImages;

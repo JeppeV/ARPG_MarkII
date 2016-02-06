@@ -14,6 +14,7 @@ public class TileHandler implements Observer {
 
     private TileImpl[][] tiles;
 
+
     public TileHandler(Map map) {
         this.tiles = initTiles(map);
     }
@@ -29,12 +30,18 @@ public class TileHandler implements Observer {
         return tiles;
     }
 
+    public TileImpl getTileByPosition(float x, float y){
+        int x0 = (int) x / Tile.WIDTH;
+        int y0 = (int) y / Tile.HEIGHT;
+        return tiles[x0][y0];
+    }
+
 
     public Tile[][] getTiles() {
         return tiles;
     }
 
-    public Tile getTile(int x, int y) {
+    public Tile getTileByIndex(int x, int y) {
         return tiles[x][y];
     }
 

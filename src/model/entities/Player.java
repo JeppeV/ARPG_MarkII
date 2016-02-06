@@ -18,6 +18,7 @@ public class Player implements Entity {
     private GameContainer gameContainer;
     private OffsetHandler offsetHandler;
     private TileHandler tileHandler;
+    private EntityHandler entityHandler;
     private Rectangle movementBox;
     private Vector2f localPosition, globalPosition, velocity;
     private float moveSpeed, maxSpeed, moveThreshold, moveSlowndownFactor;
@@ -34,6 +35,7 @@ public class Player implements Entity {
         this.offsetHandler = game.getOffsetHandler();
         this.leftOffsetBound = this.topOffsetBound = 0;
         this.tileHandler = game.getTileHandler();
+        this.entityHandler = game.getEntityHandler();
         this.rightOffsetBound = tileHandler.getTiles().length * Tile.WIDTH - gameContainer.getWidth();
         this.bottomOffsetBound = tileHandler.getTiles()[0].length * Tile.HEIGHT - gameContainer.getHeight();
         this.movementBox = Movement.getMovementBox(gameContainer, 175);
@@ -75,9 +77,17 @@ public class Player implements Entity {
 
     @Override
     public Rectangle getCollisionBox() {
-        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+        int dx = getWidth() / 2;
+        int dy = getHeight() / 2;
+        return new Rectangle(getX() + dx, getY() + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
     }
 
+
+    public Rectangle getCollisionBox(float x, float y){
+        int dx = getWidth() / 4;
+        int dy = getHeight() / 4;
+        return new Rectangle(x + dx, y + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
+    }
 
     public void setMoveRight(boolean right) {
         this.right = right;
@@ -113,6 +123,11 @@ public class Player implements Entity {
     @Override
     public void setY(float y) {
         localPosition.set(localPosition.getX(), y);
+    }
+
+    @Override
+    public void addForce(Vector2f force) {
+        localPosition.add(force);
     }
 
     @Override
@@ -189,19 +204,33 @@ public class Player implements Entity {
             globalPosition.add(velocityY);
         }
 
+        handleEntityCollision();
 
+
+    }
+
+    private void handleEntityCollision(){
+        boolean collision = false;
+        for(Entity e : entityHandler.getEntities()){
+            if(e.getID() != this.getID() && this.getCollisionBox().intersects(e.getCollisionBox())){
+                collision = true;
+                e.addForce(velocity);
+
+            }
+        }
+        velocity = collision ? velocity.scale(0.01f) : velocity;
     }
 
 
     private boolean tileCollision(Vector2f prediction) {
-        Rectangle r = new Rectangle(prediction.getX(), prediction.getY(), getWidth(), getHeight());
+        Rectangle r = getCollisionBox(prediction.getX(), prediction.getY());
 
         //development
         if (!checkCollision) return false;
 
         for (int x = 0; x < tileHandler.getTiles().length; x++) {
             for (int y = 0; y < tileHandler.getTiles()[0].length; y++) {
-                if (tileHandler.getTile(x, y).getID() == TileType.WALL && r.intersects((TileImpl) tileHandler.getTile(x, y)))
+                if (tileHandler.getTileByIndex(x, y).getID() == TileType.WALL && r.intersects((TileImpl) tileHandler.getTileByIndex(x, y)))
                     return true;
             }
         }
