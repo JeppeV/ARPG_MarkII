@@ -23,17 +23,29 @@ public class TileHandler implements Observer {
         TileImpl[][] tiles = new TileImpl[map.getWidthInTiles()][map.getHeightInTiles()];
         for (int x = 0; x < tiles.length; x++) {
             for (int y = 0; y < tiles[0].length; y++) {
-                tiles[x][y] = new TileImpl(x * Tile.WIDTH, y * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT, map.getTile(x, y));
+                tiles[x][y] = new TileImpl(x * Tile.SIZE, y * Tile.SIZE, Tile.SIZE, Tile.SIZE, map.getTile(x, y));
             }
 
         }
         return tiles;
     }
 
-    public TileImpl getTileByPosition(float x, float y){
-        int x0 = (int) x / Tile.WIDTH;
-        int y0 = (int) y / Tile.HEIGHT;
+    public TileImpl getTileByPosition(float x, float y) {
+        int x0 = (int) x / Tile.SIZE;
+        int y0 = (int) y / Tile.SIZE;
         return tiles[x0][y0];
+    }
+
+    public Vector2f getIndexByPosition(Vector2f position) {
+        int x0 = (int) position.getX() / Tile.SIZE;
+        int y0 = (int) position.getY() / Tile.SIZE;
+        return new Vector2f(x0, y0);
+    }
+
+    public Vector2f getIndexByPosition(float x, float y) {
+        int x0 = (int) x / Tile.SIZE;
+        int y0 = (int) y / Tile.SIZE;
+        return new Vector2f(x0, y0);
     }
 
 

@@ -5,8 +5,7 @@ package model.facade;
  */
 public interface Tile {
 
-    int WIDTH = 20;
-    int HEIGHT = 20;
+    int SIZE = 120;
 
     float getX();
 

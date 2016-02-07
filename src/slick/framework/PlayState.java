@@ -2,8 +2,8 @@ package slick.framework;
 
 import controller.DevelopmentController;
 import controller.PlayerController;
-import model.facade.Game;
 import model.GameImpl;
+import model.facade.Game;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;

@@ -18,6 +18,10 @@ public interface Entity {
 
     void setY(float y);
 
+    Vector2f getCenterPosition();
+
+    Vector2f getGlobalCenterPosition();
+
     void addForce(Vector2f force);
 
     int getID();

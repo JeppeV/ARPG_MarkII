@@ -34,7 +34,7 @@ public abstract class Movement {
         return false;
     }
 
-    public static Rectangle getMovementBox(GameContainer gameContainer, int size){
+    public static Rectangle getMovementBox(GameContainer gameContainer, int size) {
         float movementBoxWidth = size * gameContainer.getAspectRatio();
         float movementBoxHeight = size;
         return new Rectangle((gameContainer.getWidth() / 2) - (movementBoxWidth / 2), (gameContainer.getHeight() / 2) - (movementBoxHeight / 2), movementBoxWidth, movementBoxHeight);

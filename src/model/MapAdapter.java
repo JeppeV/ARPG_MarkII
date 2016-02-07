@@ -25,7 +25,7 @@ public class MapAdapter implements TileBasedMap {
     }
 
     public int getWidthInPixels() {
-        return map.getWidthInTiles() * Tile.WIDTH;
+        return map.getWidthInTiles() * Tile.SIZE;
     }
 
     @Override
@@ -34,12 +34,12 @@ public class MapAdapter implements TileBasedMap {
     }
 
     public int getHeightInPixels() {
-        return map.getHeightInTiles() * Tile.HEIGHT;
+        return map.getHeightInTiles() * Tile.SIZE;
     }
 
     @Override
-    public void pathFinderVisited(int i, int i1) {
-        pathFinderVisited[i][i1] = true;
+    public void pathFinderVisited(int x, int y) {
+        pathFinderVisited[x][y] = true;
     }
 
     @Override

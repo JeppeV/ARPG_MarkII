@@ -1,7 +1,7 @@
 package controller;
 
-import model.facade.Game;
 import model.entities.Player;
+import model.facade.Game;
 import org.newdawn.slick.Input;
 
 

@@ -1,61 +1,56 @@
 package model.entities;
 
 import model.GameImpl;
-import model.OffsetHandler;
 import model.facade.Entity;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
 
 /**
  * Created by Jeppe Vinberg on 05-02-2016.
  */
-public class GruntEnemy implements Enemy, Entity {
+public class GruntEnemy extends Enemy implements Entity {
 
-    private GameContainer gameContainer;
-    private Vector2f velocity, position;
+
     private int width, height;
-    private float moveSpeed, maxSpeed, moveThreshold, moveSlowndownFactor;
+    private float mass;
+    private float maxSpeed;
 
-    public GruntEnemy(int x, int y, GameImpl game){
-        this.gameContainer = game.getGameContainer();
-        this.velocity = new Vector2f(0, 0);
-        this.position = initPosition(x, y, game.getOffsetHandler());
+    public GruntEnemy(float x, float y, GameImpl game) {
+        super(x, y, game);
         this.width = 30;
         this.height = 30;
-        this.moveSpeed = 0.2f;
-        this.maxSpeed = 5;
-        this.moveThreshold = 0.0001f;
-        this.moveSlowndownFactor = 0.75f;
-    }
-
-    private Vector2f initPosition(int x, int y, OffsetHandler offsetHandler){
-        return new Vector2f(x - offsetHandler.getXOffset(), y - offsetHandler.getYOffset());
+        this.mass = 10;
+        this.maxSpeed = 5f;
     }
 
     @Override
-    public float getX() {
-        return position.getX();
+    protected float getMass() {
+        return mass;
     }
 
     @Override
-    public float getY() {
-        return position.getY();
+    protected float getMaxSpeed() {
+        return maxSpeed;
     }
 
-    @Override
-    public void setX(float x) {
-        position.set(x, position.getY());
+    protected Entity acquireTarget() {
+        Entity target = null;
+        float currentDistance, distance = 0.0f;
+        int id;
+        for (Entity e : game.getEntities()) {
+            currentDistance = e.getCenterPosition().distance(getCenterPosition());
+            id = e.getID();
+            if ((id == EntityID.PLAYER || id == EntityID.OTHER_PLAYER) && (target == null || currentDistance <= distance)) {
+                target = e;
+                distance = currentDistance;
+            }
+        }
+        return target;
     }
 
-    @Override
-    public void setY(float y) {
-        position.set(position.getX(), y);
-    }
 
     @Override
-    public void addForce(Vector2f force) {
-        position.add(force);
+    public Rectangle getCollisionBox() {
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
     @Override
@@ -73,12 +68,4 @@ public class GruntEnemy implements Enemy, Entity {
         return height;
     }
 
-    @Override
-    public void update(GameContainer gameContainer, int delta) {
-    }
-
-    @Override
-    public Rectangle getCollisionBox() {
-        return new Rectangle(getX(), getY(), getWidth(), getHeight());
-    }
 }

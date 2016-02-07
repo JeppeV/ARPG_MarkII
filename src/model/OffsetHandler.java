@@ -27,6 +27,10 @@ public class OffsetHandler extends Observable {
         notifyObservers(new Vector2f(xOffset, yOffset));
     }
 
+    public Vector2f getOffset() {
+        return new Vector2f(xOffset, yOffset);
+    }
+
     public void changeOffset(float xOffset, float yOffset) {
         this.xOffset += xOffset;
         this.yOffset += yOffset;

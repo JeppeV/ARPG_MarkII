@@ -1,9 +1,11 @@
 package model.entities;
 
 import generator.standard.TileType;
-import model.*;
+import model.GameImpl;
+import model.MapAdapter;
+import model.Movement;
+import model.OffsetHandler;
 import model.facade.Entity;
-import model.facade.Tile;
 import model.tiles.TileHandler;
 import model.tiles.TileImpl;
 import org.newdawn.slick.GameContainer;
@@ -21,7 +23,7 @@ public class Player implements Entity {
     private EntityHandler entityHandler;
     private Rectangle movementBox;
     private Vector2f localPosition, globalPosition, velocity;
-    private float moveSpeed, maxSpeed, moveThreshold, moveSlowndownFactor;
+    private float moveSpeed, maxSpeed, moveThreshold, moveSlowdownFactor;
     private int width, height;
     private boolean right, left, up, down;
     private float leftOffsetBound, topOffsetBound, rightOffsetBound, bottomOffsetBound;
@@ -30,30 +32,31 @@ public class Player implements Entity {
     private boolean checkCollision = true;
 
 
-    public Player(int x, int y, int width, int height, GameImpl game) {
-        this.gameContainer = game.getGameContainer();
+    public Player(float x, float y, int width, int height, GameImpl game) {
+        GameContainer gameContainer = game.getGameContainer();
+        MapAdapter mapAdapter = game.getMapAdapter();
         this.offsetHandler = game.getOffsetHandler();
         this.leftOffsetBound = this.topOffsetBound = 0;
         this.tileHandler = game.getTileHandler();
         this.entityHandler = game.getEntityHandler();
-        this.rightOffsetBound = tileHandler.getTiles().length * Tile.WIDTH - gameContainer.getWidth();
-        this.bottomOffsetBound = tileHandler.getTiles()[0].length * Tile.HEIGHT - gameContainer.getHeight();
+        this.rightOffsetBound = mapAdapter.getWidthInPixels() - gameContainer.getWidth();
+        this.bottomOffsetBound = mapAdapter.getHeightInPixels() - gameContainer.getHeight();
         this.movementBox = Movement.getMovementBox(gameContainer, 175);
-        this.localPosition = initPosition(x, y, game.getMapAdapter());
-        this.velocity = new Vector2f(0, 0);
+        this.localPosition = initPosition(x, y, mapAdapter);
         this.globalPosition = new Vector2f(x, y);
+        this.velocity = new Vector2f(0, 0);
         this.width = width;
         this.height = height;
         this.right = this.left = this.up = this.down = false;
         this.moveSpeed = 0.2f;
         this.maxSpeed = 5;
         this.moveThreshold = 0.0001f;
-        this.moveSlowndownFactor = 0.75f;
+        this.moveSlowdownFactor = 0.75f;
 
 
     }
 
-    private Vector2f initPosition(int x, int y, MapAdapter mapAdapter) {
+    private Vector2f initPosition(float x, float y, MapAdapter mapAdapter) {
         Rectangle bounds = new Rectangle(0, 0, mapAdapter.getWidthInPixels(), mapAdapter.getHeightInPixels());
         Vector2f localPosition = new Vector2f(x, y);
         if (!bounds.contains(x, y)) throw new IllegalStateException("Player position is outside of world bounds");
@@ -62,11 +65,13 @@ public class Player implements Entity {
         Vector2f v = new Vector2f(dX, dY);
         if (!intersectsOffsetBoundLeftOrRight(v)) {
             offsetHandler.changeOffset(dX, 0);
+            localPosition.add(new Vector2f(v.negate().getX(), 0));
         }
         if (!intersectsOffsetBoundTopOrBottom(v)) {
             offsetHandler.changeOffset(0, dY);
+            localPosition.add(new Vector2f(0, v.negate().getY()));
         }
-        localPosition.add(v.negate());
+
         return localPosition;
 
     }
@@ -77,15 +82,15 @@ public class Player implements Entity {
 
     @Override
     public Rectangle getCollisionBox() {
-        int dx = getWidth() / 2;
-        int dy = getHeight() / 2;
+        int dx = getWidth() / 4;
+        int dy = getHeight() / 5;
         return new Rectangle(getX() + dx, getY() + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
     }
 
 
-    public Rectangle getCollisionBox(float x, float y){
+    private Rectangle getCollisionBox(float x, float y) {
         int dx = getWidth() / 4;
-        int dy = getHeight() / 4;
+        int dy = getHeight() / 5;
         return new Rectangle(x + dx, y + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
     }
 
@@ -103,6 +108,17 @@ public class Player implements Entity {
 
     public void setMoveDown(boolean down) {
         this.down = down;
+    }
+
+    @Override
+    public Vector2f getCenterPosition() {
+        return new Vector2f(getX() + getWidth() / 2, getY() + getHeight() / 2);
+    }
+
+    @Override
+    public Vector2f getGlobalCenterPosition() {
+        Vector2f result = getCenterPosition().copy().add(offsetHandler.getOffset());
+        return result;
     }
 
     @Override
@@ -203,22 +219,6 @@ public class Player implements Entity {
             }
             globalPosition.add(velocityY);
         }
-
-        handleEntityCollision();
-
-
-    }
-
-    private void handleEntityCollision(){
-        boolean collision = false;
-        for(Entity e : entityHandler.getEntities()){
-            if(e.getID() != this.getID() && this.getCollisionBox().intersects(e.getCollisionBox())){
-                collision = true;
-                e.addForce(velocity);
-
-            }
-        }
-        velocity = collision ? velocity.scale(0.01f) : velocity;
     }
 
 
@@ -256,7 +256,7 @@ public class Player implements Entity {
         float x1 = movementBox.getX();
         float x2 = movementBox.getX() + movementBox.getWidth();
 
-        if (((localPosition.getX() <= x1) && Movement.isMovingLeft(velocity)) || ((localPosition.getX() >= x2) && Movement.isMovingRight(velocity))) {
+        if (((getX() <= x1) && Movement.isMovingLeft(velocity)) || ((getX() >= x2) && Movement.isMovingRight(velocity))) {
             return true;
         }
         return false;
@@ -266,7 +266,7 @@ public class Player implements Entity {
         float y1 = movementBox.getY();
         float y2 = movementBox.getY() + movementBox.getHeight();
 
-        if (((localPosition.getY() <= y1) && Movement.isMovingUp(velocity)) || ((localPosition.getY() >= y2) && Movement.isMovingDown(velocity))) {
+        if (((getY() <= y1) && Movement.isMovingUp(velocity)) || ((getY() >= y2) && Movement.isMovingDown(velocity))) {
             return true;
         }
         return false;
@@ -274,7 +274,7 @@ public class Player implements Entity {
 
 
     private Vector2f slowdown(Vector2f vel) {
-        vel.scale(moveSlowndownFactor);
+        vel.scale(moveSlowdownFactor);
         //if character is moving slower than threshold, halt
         if (vel.length() < moveThreshold) {
             vel.set(0, 0);

@@ -1,7 +1,6 @@
 package view;
 
 import model.facade.Entity;
-import model.entities.EntityID;
 import model.facade.Game;
 import org.newdawn.slick.SlickException;
 
@@ -26,9 +25,9 @@ public class EntityGraphicsHandler {
         for (Entity e : entities) {
             ref = "res/";
             //if (e.getID() == EntityID.PLAYER) {
-                //player
-                ref = ref + "player.png";
-                entityImages.add(new EntityImage(ref, e));
+            //player
+            ref = ref + "player.png";
+            entityImages.add(new EntityImage(ref, e));
             //}
             //... other cases
         }
