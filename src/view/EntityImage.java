@@ -20,6 +20,8 @@ public class EntityImage extends Image {
 
     @Override
     public void draw() {
+        super.setRotation(entity.getRotation());
         super.draw(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
     }
+
 }

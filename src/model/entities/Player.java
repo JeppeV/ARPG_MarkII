@@ -2,7 +2,6 @@ package model.entities;
 
 import generator.standard.TileType;
 import model.GameImpl;
-import model.MapAdapter;
 import model.Movement;
 import model.OffsetHandler;
 import model.facade.Entity;
@@ -34,15 +33,14 @@ public class Player implements Entity {
 
     public Player(float x, float y, int width, int height, GameImpl game) {
         GameContainer gameContainer = game.getGameContainer();
-        MapAdapter mapAdapter = game.getMapAdapter();
         this.offsetHandler = game.getOffsetHandler();
         this.leftOffsetBound = this.topOffsetBound = 0;
         this.tileHandler = game.getTileHandler();
         this.entityHandler = game.getEntityHandler();
-        this.rightOffsetBound = mapAdapter.getWidthInPixels() - gameContainer.getWidth();
-        this.bottomOffsetBound = mapAdapter.getHeightInPixels() - gameContainer.getHeight();
+        this.rightOffsetBound = tileHandler.getWidthInPixels() - gameContainer.getWidth();
+        this.bottomOffsetBound = tileHandler.getHeightInPixels() - gameContainer.getHeight();
         this.movementBox = Movement.getMovementBox(gameContainer, 175);
-        this.localPosition = initPosition(x, y, mapAdapter);
+        this.localPosition = initPosition(x, y, tileHandler);
         this.globalPosition = new Vector2f(x, y);
         this.velocity = new Vector2f(0, 0);
         this.width = width;
@@ -56,8 +54,8 @@ public class Player implements Entity {
 
     }
 
-    private Vector2f initPosition(float x, float y, MapAdapter mapAdapter) {
-        Rectangle bounds = new Rectangle(0, 0, mapAdapter.getWidthInPixels(), mapAdapter.getHeightInPixels());
+    private Vector2f initPosition(float x, float y, TileHandler tileHandler) {
+        Rectangle bounds = new Rectangle(0, 0, tileHandler.getWidthInPixels(), tileHandler.getHeightInPixels());
         Vector2f localPosition = new Vector2f(x, y);
         if (!bounds.contains(x, y)) throw new IllegalStateException("Player position is outside of world bounds");
         float dX = x - movementBox.getCenterX();
@@ -139,6 +137,11 @@ public class Player implements Entity {
     @Override
     public void setY(float y) {
         localPosition.set(localPosition.getX(), y);
+    }
+
+    @Override
+    public float getRotation() {
+        return 0;
     }
 
     @Override

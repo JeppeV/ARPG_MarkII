@@ -22,6 +22,8 @@ public interface Entity {
 
     Vector2f getGlobalCenterPosition();
 
+    float getRotation();
+
     void addForce(Vector2f force);
 
     int getID();

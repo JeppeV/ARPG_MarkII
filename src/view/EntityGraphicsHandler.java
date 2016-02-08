@@ -1,5 +1,6 @@
 package view;
 
+import model.entities.EntityID;
 import model.facade.Entity;
 import model.facade.Game;
 import org.newdawn.slick.SlickException;
@@ -24,11 +25,15 @@ public class EntityGraphicsHandler {
         String ref;
         for (Entity e : entities) {
             ref = "res/";
-            //if (e.getID() == EntityID.PLAYER) {
-            //player
-            ref = ref + "player.png";
-            entityImages.add(new EntityImage(ref, e));
-            //}
+            if (e.getID() == EntityID.PLAYER) {
+                //player
+                ref = ref + "player.png";
+                entityImages.add(new EntityImage(ref, e));
+            } else if (e.getID() == EntityID.ENEMY_GRUNT) {
+                //enemy grunt
+                ref = ref + "enemy_grunt.png";
+                entityImages.add(new EntityImage(ref, e));
+            }
             //... other cases
         }
         return entityImages;

@@ -2,7 +2,6 @@ package model;
 
 import generator.standard.Map;
 import generator.standard.TileType;
-import model.facade.Tile;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
@@ -24,17 +23,9 @@ public class MapAdapter implements TileBasedMap {
         return map.getWidthInTiles();
     }
 
-    public int getWidthInPixels() {
-        return map.getWidthInTiles() * Tile.SIZE;
-    }
-
     @Override
     public int getHeightInTiles() {
         return map.getHeightInTiles();
-    }
-
-    public int getHeightInPixels() {
-        return map.getHeightInTiles() * Tile.SIZE;
     }
 
     @Override
