@@ -35,14 +35,13 @@ public class TileImpl extends Rectangle implements Tile {
         return super.getHeight();
     }
 
+    @Override
+    public String toString() {
+        return "Tile(" + (int) getX() + "," + (int) getY() + ")";
+    }
 
     @Override
     public char getID() {
         return id;
-    }
-
-    @Override
-    public String toString() {
-        return "Tile(" + (int) getX() + "," + (int) getY() + ")";
     }
 }

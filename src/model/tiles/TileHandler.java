@@ -43,6 +43,12 @@ public class TileHandler implements Observer {
         return tiles[x0][y0];
     }
 
+    public Vector2f getIndexByPosition(float x, float y) {
+        int x0 = (int) x / Tile.SIZE;
+        int y0 = (int) y / Tile.SIZE;
+        return new Vector2f(x0, y0);
+    }
+
     public int getWidthInTiles() {
         return tiles.length;
     }

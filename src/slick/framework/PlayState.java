@@ -40,13 +40,18 @@ public class PlayState extends BasicGameState {
     }
 
     @Override
+    public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
+        graphicsHandler.render(graphics);
+    }
+
+    @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
         game.update(gameContainer, i);
     }
 
     @Override
-    public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
-        graphicsHandler.render(graphics);
+    public int getID() {
+        return id;
     }
 
     @Override
@@ -54,10 +59,5 @@ public class PlayState extends BasicGameState {
         Input input = gameContainer.getInput();
         listeners.forEach(input::removeListener);
 
-    }
-
-    @Override
-    public int getID() {
-        return id;
     }
 }

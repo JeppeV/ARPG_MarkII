@@ -16,10 +16,7 @@ public abstract class Enemy implements Entity, Mover {
     protected TileHandler tileHandler;
     protected Vector2f position, velocity;
     protected boolean attacking;
-
     private OffsetHandler offsetHandler;
-    private final float MAX_SEE_AHEAD = 4;
-
     private float moveThreshold, moveSlowdownFactor;
 
 
@@ -40,11 +37,11 @@ public abstract class Enemy implements Entity, Mover {
         return position;
     }
 
+    protected abstract Entity acquireTarget();
+
     protected abstract float getMass();
 
     protected abstract float getMaxSpeed();
-
-    protected abstract Entity acquireTarget();
 
     protected Vector2f seek(Vector2f target) {
         Vector2f steering;
@@ -96,7 +93,7 @@ public abstract class Enemy implements Entity, Mover {
 
     @Override
     public void addForce(Vector2f force) {
-        position.add(force);
+        velocity.add(force);
     }
 
 

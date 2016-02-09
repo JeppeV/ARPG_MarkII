@@ -25,16 +25,6 @@ public class GruntEnemy extends Enemy implements Entity {
     }
 
     @Override
-    protected float getMass() {
-        return mass;
-    }
-
-    @Override
-    protected float getMaxSpeed() {
-        return maxSpeed;
-    }
-
-    @Override
     protected Entity acquireTarget() {
         Entity target = null;
         float currentDistance, distance = 0.0f;
@@ -51,14 +41,28 @@ public class GruntEnemy extends Enemy implements Entity {
     }
 
     @Override
+    protected float getMass() {
+        return mass;
+    }
+
+    @Override
+    protected float getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    @Override
     public void update(GameContainer gameContainer, int delta) {
-        Entity target = acquireTarget();
         Vector2f steering = new Vector2f(0, 0);
 
+        //find a target to move towards
+        Entity target = acquireTarget();
+
+        //if there is a target, steer towards it
         if (target != null) {
             steering = seek(target.getCenterPosition());
         }
 
+        //if adding steering to the current velocity does not exceed our maxSpeed, add steering to velocity
         if (velocity.copy().add(steering).length() < getMaxSpeed()) {
             velocity.add(steering);
         }
@@ -67,6 +71,7 @@ public class GruntEnemy extends Enemy implements Entity {
         if (velocity.length() > 0) {
             velocity = slowdown(velocity);
         }
+        //if there is a target, and we are not touching that target, move towards target
         if (target != null && !getCollisionBox().intersects(target.getCollisionBox())) {
             position.add(velocity);
         }
@@ -75,12 +80,6 @@ public class GruntEnemy extends Enemy implements Entity {
     @Override
     public float getRotation() {
         return 90 + (float) velocity.getTheta();
-    }
-
-
-    @Override
-    public Rectangle getCollisionBox() {
-        return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
     @Override
@@ -96,6 +95,11 @@ public class GruntEnemy extends Enemy implements Entity {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public Rectangle getCollisionBox() {
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
 }

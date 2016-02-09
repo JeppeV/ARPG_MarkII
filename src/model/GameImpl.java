@@ -50,7 +50,7 @@ public class GameImpl implements Game {
         Vector2f start = getRandomStartingPosition();
         start = start == null ? new Vector2f(50, 50) : start;
         this.player = new Player(start.getX(), start.getY(), playerWidth, playerHeight, this);
-        entityHandler.add(new GruntEnemy(50, 50, this));
+        entityHandler.add(new GruntEnemy(1050, 1050, this));
         entityHandler.add(player);
 
 

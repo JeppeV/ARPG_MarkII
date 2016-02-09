@@ -11,11 +11,10 @@ import view.GraphicsHandler;
  */
 public class MainGame extends StateBasedGame {
 
-    private Game game;
-    private GraphicsHandler graphicsHandler;
-
     public static final int menuStateID = 0;
     public static final int playStateID = 1;
+    private Game game;
+    private GraphicsHandler graphicsHandler;
 
     public MainGame() {
         super("ARPG_MarkII");

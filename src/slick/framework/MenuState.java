@@ -44,13 +44,13 @@ public class MenuState extends BasicGameState {
     }
 
     @Override
-    public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-        Input input = gameContainer.getInput();
-        input.removeListener(menuController);
+    public int getID() {
+        return id;
     }
 
     @Override
-    public int getID() {
-        return id;
+    public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+        Input input = gameContainer.getInput();
+        input.removeListener(menuController);
     }
 }

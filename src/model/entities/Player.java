@@ -16,10 +16,8 @@ import org.newdawn.slick.geom.Vector2f;
  */
 public class Player implements Entity {
 
-    private GameContainer gameContainer;
     private OffsetHandler offsetHandler;
     private TileHandler tileHandler;
-    private EntityHandler entityHandler;
     private Rectangle movementBox;
     private Vector2f localPosition, globalPosition, velocity;
     private float moveSpeed, maxSpeed, moveThreshold, moveSlowdownFactor;
@@ -36,7 +34,6 @@ public class Player implements Entity {
         this.offsetHandler = game.getOffsetHandler();
         this.leftOffsetBound = this.topOffsetBound = 0;
         this.tileHandler = game.getTileHandler();
-        this.entityHandler = game.getEntityHandler();
         this.rightOffsetBound = tileHandler.getWidthInPixels() - gameContainer.getWidth();
         this.bottomOffsetBound = tileHandler.getHeightInPixels() - gameContainer.getHeight();
         this.movementBox = Movement.getMovementBox(gameContainer, 175);
@@ -78,20 +75,6 @@ public class Player implements Entity {
         checkCollision = !checkCollision;
     }
 
-    @Override
-    public Rectangle getCollisionBox() {
-        int dx = getWidth() / 4;
-        int dy = getHeight() / 5;
-        return new Rectangle(getX() + dx, getY() + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
-    }
-
-
-    private Rectangle getCollisionBox(float x, float y) {
-        int dx = getWidth() / 4;
-        int dy = getHeight() / 5;
-        return new Rectangle(x + dx, y + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
-    }
-
     public void setMoveRight(boolean right) {
         this.right = right;
     }
@@ -109,67 +92,7 @@ public class Player implements Entity {
     }
 
     @Override
-    public Vector2f getCenterPosition() {
-        return new Vector2f(getX() + getWidth() / 2, getY() + getHeight() / 2);
-    }
-
-    @Override
-    public Vector2f getGlobalCenterPosition() {
-        Vector2f result = getCenterPosition().copy().add(offsetHandler.getOffset());
-        return result;
-    }
-
-    @Override
-    public float getX() {
-        return localPosition.getX();
-    }
-
-    @Override
-    public float getY() {
-        return localPosition.getY();
-    }
-
-    @Override
-    public void setX(float x) {
-        localPosition.set(x, localPosition.getY());
-    }
-
-    @Override
-    public void setY(float y) {
-        localPosition.set(localPosition.getX(), y);
-    }
-
-    @Override
-    public float getRotation() {
-        return 0;
-    }
-
-    @Override
-    public void addForce(Vector2f force) {
-        localPosition.add(force);
-    }
-
-    @Override
-    public int getID() {
-        return EntityID.PLAYER;
-    }
-
-    @Override
-    public int getWidth() {
-        return width;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    @Override
     public void update(GameContainer gameContainer, int delta) {
-        updateMovement(delta);
-    }
-
-    private void updateMovement(int delta) {
         float x = 0, y = 0;
         if (right) {
             x += moveSpeed;
@@ -224,6 +147,74 @@ public class Player implements Entity {
         }
     }
 
+    @Override
+    public float getX() {
+        return localPosition.getX();
+    }
+
+    @Override
+    public void setX(float x) {
+        localPosition.set(x, localPosition.getY());
+    }
+
+    @Override
+    public float getY() {
+        return localPosition.getY();
+    }
+
+    @Override
+    public void setY(float y) {
+        localPosition.set(localPosition.getX(), y);
+    }
+
+    @Override
+    public Vector2f getCenterPosition() {
+        return new Vector2f(getX() + getWidth() / 2, getY() + getHeight() / 2);
+    }
+
+    @Override
+    public Vector2f getGlobalCenterPosition() {
+        Vector2f result = getCenterPosition().copy().add(offsetHandler.getOffset());
+        return result;
+    }
+
+    @Override
+    public float getRotation() {
+        return 0;
+    }
+
+    @Override
+    public void addForce(Vector2f force) {
+        velocity.add(force);
+    }
+
+    @Override
+    public int getID() {
+        return EntityID.PLAYER;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public Rectangle getCollisionBox() {
+        int dx = getWidth() / 4;
+        int dy = getHeight() / 5;
+        return new Rectangle(getX() + dx, getY() + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
+    }
+
+    private Rectangle getCollisionBox(float x, float y) {
+        int dx = getWidth() / 4;
+        int dy = getHeight() / 5;
+        return new Rectangle(x + dx, y + dy, getWidth() - (2 * dx), getHeight() - (2 * dy));
+    }
 
     private boolean tileCollision(Vector2f prediction) {
         Rectangle r = getCollisionBox(prediction.getX(), prediction.getY());
@@ -239,7 +230,6 @@ public class Player implements Entity {
         }
         return false;
     }
-
 
     private boolean intersectsOffsetBoundLeftOrRight(Vector2f velocity) {
         if (((offsetHandler.getXOffset() <= leftOffsetBound) && Movement.isMovingLeft(velocity)) || ((offsetHandler.getXOffset() >= rightOffsetBound) && Movement.isMovingRight(velocity))) {
