@@ -13,7 +13,7 @@ public class GraphicsHandler {
     private EntityGraphicsHandler entityGraphicsHandler;
 
     public GraphicsHandler(Game game) throws SlickException {
-        this.tileGraphicsHandler = new TileGraphicsHandler(game.getTiles());
+        this.tileGraphicsHandler = new TileGraphicsHandler(game);
         this.entityGraphicsHandler = new EntityGraphicsHandler(game);
     }
 

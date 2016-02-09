@@ -3,6 +3,7 @@ package model.facade;
 import model.entities.Player;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 import java.util.LinkedList;
 
@@ -11,11 +12,14 @@ import java.util.LinkedList;
  */
 public interface Game {
 
+    void update(GameContainer gameContainer, int delta) throws SlickException;
+
+    Rectangle getCameraBounds();
+
     Player getPlayer();
 
     Tile[][] getTiles();
 
     LinkedList<Entity> getEntities();
 
-    void update(GameContainer gameContainer, int delta) throws SlickException;
 }

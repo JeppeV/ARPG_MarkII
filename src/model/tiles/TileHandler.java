@@ -4,6 +4,7 @@ import generator.standard.Map;
 import model.facade.Tile;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -29,6 +30,14 @@ public class TileHandler implements Observer {
         return tiles;
     }
 
+    public int getWidthInTiles() {
+        return tiles.length;
+    }
+
+    public int getHeightInTiles() {
+        return tiles[0].length;
+    }
+
     public int getWidthInPixels() {
         return getWidthInTiles() * Tile.SIZE;
     }
@@ -43,27 +52,52 @@ public class TileHandler implements Observer {
         return tiles[x0][y0];
     }
 
+    public ArrayList<TileImpl> getNeighboursByPosition(float x, float y) {
+        int x0 = (int) x / Tile.SIZE;
+        int y0 = (int) y / Tile.SIZE;
+        return getNeighbours(x0, y0);
+
+    }
+
+    public ArrayList<TileImpl> getNeighboursByPosition(Vector2f position) {
+        int x0 = (int) position.getX() / Tile.SIZE;
+        int y0 = (int) position.getY() / Tile.SIZE;
+        return getNeighbours(x0, y0);
+
+    }
+
     public Vector2f getIndexByPosition(float x, float y) {
         int x0 = (int) x / Tile.SIZE;
         int y0 = (int) y / Tile.SIZE;
         return new Vector2f(x0, y0);
     }
 
-    public int getWidthInTiles() {
-        return tiles.length;
+    public TileImpl getTileByIndex(int x, int y) {
+        return tiles[x][y];
     }
 
-    public int getHeightInTiles() {
-        return tiles[0].length;
+    public ArrayList<TileImpl> getNeighboursByIndex(int x, int y) {
+        return getNeighbours(x, y);
     }
-
 
     public Tile[][] getTiles() {
         return tiles;
     }
 
-    public Tile getTileByIndex(int x, int y) {
-        return tiles[x][y];
+    private ArrayList<TileImpl> getNeighbours(int x, int y) {
+        ArrayList<TileImpl> result = new ArrayList<>();
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if (i == 0 && j == 0 || !isIndexWithinBounds(x + i, y + j)) continue;
+                result.add(getTileByIndex(x + i, y + j));
+
+            }
+        }
+        return result;
+    }
+
+    private boolean isIndexWithinBounds(int x, int y) {
+        return (0 <= x && x < getWidthInTiles()) && (0 <= y && y < getHeightInTiles());
     }
 
     private void changeTilesOffset(float xOffset, float yOffset) {

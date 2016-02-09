@@ -1,6 +1,7 @@
 package view;
 
 import generator.standard.TileType;
+import model.facade.Game;
 import model.facade.Tile;
 import org.newdawn.slick.SlickException;
 
@@ -9,10 +10,12 @@ import org.newdawn.slick.SlickException;
  */
 public class TileGraphicsHandler {
 
+    private Game game;
     private TileImage[][] tileImages;
 
-    public TileGraphicsHandler(Tile[][] tiles) throws SlickException {
-        tileImages = initTileImages(tiles);
+    public TileGraphicsHandler(Game game) throws SlickException {
+        this.game = game;
+        tileImages = initTileImages(game.getTiles());
     }
 
     private TileImage[][] initTileImages(Tile[][] tiles) throws SlickException {
@@ -37,9 +40,11 @@ public class TileGraphicsHandler {
     }
 
     public void render() {
+        TileImage t;
         for (int x = 0; x < tileImages.length; x++) {
             for (int y = 0; y < tileImages[0].length; y++) {
-                tileImages[x][y].draw();
+                t = tileImages[x][y];
+                if(t.getBounds().intersects(game.getCameraBounds())) t.draw();
             }
         }
     }

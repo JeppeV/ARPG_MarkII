@@ -40,6 +40,6 @@ public class EntityGraphicsHandler {
     }
 
     public void render() {
-        entityImages.forEach(EntityImage::draw);
+        entityImages.stream().filter(e -> e.getBounds().intersects(game.getCameraBounds())).forEach(EntityImage::draw);
     }
 }

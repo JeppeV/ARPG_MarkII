@@ -178,6 +178,11 @@ public class Player implements Entity {
         return result;
     }
 
+    public Vector2f getGlobalCenterPosition(float x, float y) {
+        Vector2f result = getCenterPosition().copy().add(offsetHandler.getOffset());
+        return result;
+    }
+
     @Override
     public float getRotation() {
         return 0;
@@ -221,12 +226,9 @@ public class Player implements Entity {
 
         //development
         if (!checkCollision) return false;
-
-        for (int x = 0; x < tileHandler.getTiles().length; x++) {
-            for (int y = 0; y < tileHandler.getTiles()[0].length; y++) {
-                if (tileHandler.getTileByIndex(x, y).getID() == TileType.WALL && r.intersects((TileImpl) tileHandler.getTileByIndex(x, y)))
-                    return true;
-            }
+        //actual collision
+        for (TileImpl t : tileHandler.getNeighboursByPosition(getGlobalCenterPosition())) {
+            if (t.getID() == TileType.WALL && r.intersects(t)) return true;
         }
         return false;
     }

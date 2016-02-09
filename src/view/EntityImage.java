@@ -4,6 +4,7 @@ package view;
 import model.facade.Entity;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 
 /**
@@ -22,6 +23,10 @@ public class EntityImage extends Image {
     public void draw() {
         super.setRotation(entity.getRotation());
         super.draw(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
     }
 
 }
