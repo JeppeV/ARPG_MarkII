@@ -23,6 +23,7 @@ public class EntityImage extends Image {
     public void draw() {
         super.setRotation(entity.getRotation());
         super.draw(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
+
     }
 
     public Rectangle getBounds(){

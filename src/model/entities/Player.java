@@ -145,6 +145,9 @@ public class Player implements Entity {
             }
             globalPosition.add(velocityY);
         }
+
+        //System.out.println(tileHandler.getTileByIndex(0,0));
+
     }
 
     @Override

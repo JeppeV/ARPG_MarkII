@@ -2,26 +2,30 @@ package model.entities;
 
 import model.GameImpl;
 import model.facade.Entity;
+import model.facade.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.util.pathfinding.navmesh.NavPath;
 
 /**
  * Created by Jeppe Vinberg on 05-02-2016.
  */
 public class GruntEnemy extends Enemy implements Entity {
 
-
     private int width, height;
     private float mass;
     private float maxSpeed;
+    private boolean closeFollow;
+
 
     public GruntEnemy(float x, float y, GameImpl game) {
         super(x, y, game);
         this.width = 30;
         this.height = 30;
         this.mass = 10;
-        this.maxSpeed = 5f;
+        this.maxSpeed = 10f;
+        this.closeFollow = false;
     }
 
     @Override
@@ -58,9 +62,21 @@ public class GruntEnemy extends Enemy implements Entity {
         Entity target = acquireTarget();
 
         //if there is a target, steer towards it
-        if (target != null) {
-            steering = seek(target.getCenterPosition());
+        if (target != null && target.getCenterPosition().distance(getCenterPosition()) < Tile.SIZE) {
+            steering = steering.add(seek(target.getCenterPosition()));
+            closeFollow = true;
+        }else if(target != null){
+            if(closeFollow){
+                steering = followPathTo(target, true);
+                closeFollow = false;
+            }else{
+                steering = followPathTo(target, false);
+            }
+
         }
+
+
+        //steering = steering.add(collisionAvoidance());
 
         //if adding steering to the current velocity does not exceed our maxSpeed, add steering to velocity
         if (velocity.copy().add(steering).length() < getMaxSpeed()) {
@@ -68,7 +84,7 @@ public class GruntEnemy extends Enemy implements Entity {
         }
 
         //if character is moving, slow down
-        if (velocity.length() > 0) {
+        if (velocity.length() > 0.0) {
             velocity = slowdown(velocity);
         }
         //if there is a target, and we are not touching that target, move towards target
@@ -79,7 +95,7 @@ public class GruntEnemy extends Enemy implements Entity {
 
     @Override
     public float getRotation() {
-        return 90 + (float) velocity.getTheta();
+        return (float) velocity.getTheta();
     }
 
     @Override

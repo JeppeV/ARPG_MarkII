@@ -17,6 +17,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.util.pathfinding.navmesh.NavMesh;
+import org.newdawn.slick.util.pathfinding.navmesh.NavMeshBuilder;
 
 import java.util.LinkedList;
 
@@ -29,6 +31,7 @@ public class GameImpl implements Game {
     private Rectangle cameraBounds;
     private Player player;
     private MapAdapter mapAdapter;
+    private NavMesh navMesh;
     private OffsetHandler offsetHandler;
     private TileHandler tileHandler;
     private EntityHandler entityHandler;
@@ -38,6 +41,8 @@ public class GameImpl implements Game {
         this.cameraBounds = new Rectangle(0, 0, gameContainer.getWidth(), gameContainer.getHeight());
         Map map = generateMap(new DungeonGenerator(), 100, 100);
         this.mapAdapter = new MapAdapter(map);
+        NavMeshBuilder navMeshBuilder = new NavMeshBuilder();
+        this.navMesh = navMeshBuilder.build(mapAdapter, true);
         this.tileHandler = new TileHandler(map);
         this.entityHandler = new EntityHandler();
         this.offsetHandler = new OffsetHandler();
@@ -51,7 +56,7 @@ public class GameImpl implements Game {
         this.player = new Player(start.getX(), start.getY(), playerWidth, playerHeight, this);
         entityHandler.add(player);
         //test enemy
-        entityHandler.add(new GruntEnemy(1050, 1050, this));
+        entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
 
     }
 
@@ -75,6 +80,10 @@ public class GameImpl implements Game {
     @Override
     public void update(GameContainer gameContainer, int delta) throws SlickException {
         entityHandler.update(gameContainer, delta);
+    }
+
+    public MapAdapter getMapAdapter(){
+        return mapAdapter;
     }
 
     @Override

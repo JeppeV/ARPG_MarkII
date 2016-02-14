@@ -88,7 +88,7 @@ public class TileHandler implements Observer {
         ArrayList<TileImpl> result = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                if (i == 0 && j == 0 || !isIndexWithinBounds(x + i, y + j)) continue;
+                if ((i == 0 && j == 0) || !isIndexWithinBounds(x + i, y + j)) continue;
                 result.add(getTileByIndex(x + i, y + j));
 
             }

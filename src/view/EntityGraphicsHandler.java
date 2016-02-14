@@ -1,9 +1,13 @@
 package view;
 
+import model.entities.Enemy;
 import model.entities.EntityID;
 import model.facade.Entity;
 import model.facade.Game;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.LinkedList;
 
@@ -41,5 +45,7 @@ public class EntityGraphicsHandler {
 
     public void render() {
         entityImages.stream().filter(e -> e.getBounds().intersects(game.getCameraBounds())).forEach(EntityImage::draw);
+
+
     }
 }
