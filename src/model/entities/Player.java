@@ -229,7 +229,7 @@ public class Player implements Entity {
 
         //development
         if (!checkCollision) return false;
-        
+
         //actual collision
         for (TileImpl t : tileHandler.getNeighboursByPosition(getGlobalCenterPosition())) {
             if (t.getID() == TileType.WALL && r.intersects(t)) return true;

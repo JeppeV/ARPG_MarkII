@@ -23,7 +23,7 @@ public class TileImage extends Image {
         super.draw(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight());
     }
 
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return new Rectangle(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight());
     }
 }

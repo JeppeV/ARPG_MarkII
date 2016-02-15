@@ -6,7 +6,6 @@ import model.facade.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.util.pathfinding.navmesh.NavPath;
 
 /**
  * Created by Jeppe Vinberg on 05-02-2016.
@@ -37,7 +36,7 @@ public class GruntEnemy extends Enemy implements Entity {
         for (Entity e : game.getEntities()) {
             currentDistance = e.getCenterPosition().distance(getCenterPosition());
             id = e.getID();
-            if ((id == EntityID.PLAYER || id == EntityID.OTHER_PLAYER) && (target == null || currentDistance <= distance)) {
+            if (id == EntityID.PLAYER && (target == null || currentDistance <= distance)) {
                 target = e;
                 distance = currentDistance;
             }
@@ -66,19 +65,19 @@ public class GruntEnemy extends Enemy implements Entity {
         if (target != null && target.getCenterPosition().distance(getCenterPosition()) < Tile.SIZE) {
             steering = steering.add(seek(target.getCenterPosition()));
             closeFollow = true;
-        }else if(target != null){
-            if(closeFollow){
+        } else if (target != null) {
+            if (closeFollow) {
                 steering = followPathTo(target, true);
                 closeFollow = false;
-            }else{
+            } else {
                 steering = followPathTo(target, false);
             }
 
         }
 
 
+        steering = steering.add(tileCollisionAvoidance());
 
-        steering = steering.add(collisionAvoidance());
 
         //if adding steering to the current velocity does not exceed our maxSpeed, add steering to velocity
         if (velocity.copy().add(steering).length() < getMaxSpeed()) {

@@ -68,7 +68,7 @@ public abstract class Enemy implements Entity, Mover {
         return steering;
     }
 
-    protected Vector2f collisionAvoidance(){
+    protected Vector2f tileCollisionAvoidance() {
         Vector2f ahead, ahead2;
         Vector2f avoidance = new Vector2f(0, 0);
         TileImpl tile;
@@ -85,7 +85,7 @@ public abstract class Enemy implements Entity, Mover {
 
 
         tile = mostThreateningTile(ahead, ahead2);
-        if(tile != null){
+        if (tile != null) {
             float x = ahead.getX() - tile.getCenterX();
             float y = ahead.getY() - tile.getCenterY();
             avoidance.set(x, y);
@@ -95,19 +95,19 @@ public abstract class Enemy implements Entity, Mover {
         return avoidance;
     }
 
-    private TileImpl mostThreateningTile(Vector2f ahead, Vector2f ahead2){
-        //TileImpl t;
+
+    private TileImpl mostThreateningTile(Vector2f ahead, Vector2f ahead2) {
         TileImpl result = null;
         float d, bestDistance = 0.0f;
         boolean collision;
         Vector2f tCenter;
         Vector2f index = tileHandler.getIndexByPosition(getGlobalCenterPosition().getX(), getGlobalCenterPosition().getY());
-        for(TileImpl t : tileHandler.getNeighbours((int)index.getX(), (int)index.getY(), 2, true)){
+        for (TileImpl t : tileHandler.getNeighbours((int) index.getX(), (int) index.getY(), 2, true)) {
             collision = vectorIntersectsTile(ahead, t) || vectorIntersectsTile(ahead2, t) || vectorIntersectsTile(getCenterPosition(), t);
-            if(collision){
+            if (collision) {
                 tCenter = new Vector2f(t.getCenterX(), t.getCenterY());
                 d = position.distance(tCenter);
-                if(result == null || (d < bestDistance)){
+                if (result == null || (d < bestDistance)) {
                     result = t;
                     bestDistance = d;
                 }
@@ -116,8 +116,7 @@ public abstract class Enemy implements Entity, Mover {
         return result;
     }
 
-    private boolean vectorIntersectsTile(Vector2f v, TileImpl t){
-        Vector2f tileCenter = new Vector2f(t.getCenterX(), t.getCenterY());
+    private boolean vectorIntersectsTile(Vector2f v, TileImpl t) {
         //return t.getID() == TileType.WALL && v.distance(tileCenter) <= Tile.SIZE / 2;
         return t.getID() == TileType.WALL && t.contains(v.getX(), v.getY());
     }
@@ -131,36 +130,36 @@ public abstract class Enemy implements Entity, Mover {
         return vel;
     }
 
-    protected Vector2f followPathTo(Entity e, boolean newPath){
+    protected Vector2f followPathTo(Entity e, boolean newPath) {
         Vector2f target, result = new Vector2f(0, 0);
-        if(newPath || path == null || !e.equals(currentTarget)){
+        if (newPath || path == null || !e.equals(currentTarget)) {
             path = getNewPathTo(e);
             step = 0;
             currentTarget = e;
         }
 
-        if(path != null && step < path.getLength()){
+        if (path != null && step < path.getLength()) {
 
             TileImpl t = tileHandler.getTileByIndex(path.getX(step), path.getY(step));
             target = new Vector2f(t.getCenterX(), t.getCenterY());
-            if(getCenterPosition().distance(target) <= Tile.SIZE / 4){
+            if (getCenterPosition().distance(target) <= Tile.SIZE / 4) {
                 step++;
             }
             result = seek(target);
-        }else{
+        } else {
             path = null;
+            currentTarget = null;
         }
 
         return result;
     }
 
 
-    private Path getNewPathTo(Entity e){
+    private Path getNewPathTo(Entity e) {
         Vector2f source = new Vector2f(tileHandler.getIndexByPosition(getGlobalCenterPosition().getX(), getGlobalCenterPosition().getY()));
         Vector2f target = new Vector2f(tileHandler.getIndexByPosition(e.getGlobalCenterPosition().getX(), e.getGlobalCenterPosition().getY()));
-        return pathFinder.findPath(this, (int)source.getX(), (int)source.getY(), (int)target.getX(), (int)target.getY());
+        return pathFinder.findPath(this, (int) source.getX(), (int) source.getY(), (int) target.getX(), (int) target.getY());
     }
-
 
 
     @Override

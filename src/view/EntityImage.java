@@ -26,7 +26,7 @@ public class EntityImage extends Image {
 
     }
 
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return new Rectangle(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
     }
 

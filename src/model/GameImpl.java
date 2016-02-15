@@ -17,8 +17,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.util.pathfinding.navmesh.NavMesh;
-import org.newdawn.slick.util.pathfinding.navmesh.NavMeshBuilder;
 
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
@@ -58,6 +56,7 @@ public class GameImpl implements Game {
         entityHandler.add(player);
         //test enemies
         entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
+        entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
         //addEnemies(200);
 
     }
@@ -66,11 +65,11 @@ public class GameImpl implements Game {
         return mapGenerator.generateMap(width, height);
     }
 
-    private void addEnemies(int n){
+    private void addEnemies(int n) {
         Vector2f pos;
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             pos = getRandomStartingPosition();
-            if(pos != null){
+            if (pos != null) {
                 entityHandler.add(new GruntEnemy(pos.getX(), pos.getY(), this));
             }
         }
@@ -94,11 +93,11 @@ public class GameImpl implements Game {
         entityHandler.update(gameContainer, delta);
     }
 
-    public ExecutorService getExecutorService(){
+    public ExecutorService getExecutorService() {
         return executorService;
     }
 
-    public MapAdapter getMapAdapter(){
+    public MapAdapter getMapAdapter() {
         return mapAdapter;
     }
 
@@ -120,6 +119,10 @@ public class GameImpl implements Game {
     @Override
     public LinkedList<Entity> getEntities() {
         return entityHandler.getEntities();
+    }
+
+    public EntityHandler getEntityHandler() {
+        return entityHandler;
     }
 
     public TileHandler getTileHandler() {

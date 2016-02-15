@@ -44,7 +44,7 @@ public class TileGraphicsHandler {
         for (int x = 0; x < tileImages.length; x++) {
             for (int y = 0; y < tileImages[0].length; y++) {
                 t = tileImages[x][y];
-                if(t.getBounds().intersects(game.getCameraBounds())) t.draw();
+                if (t.getBounds().intersects(game.getCameraBounds())) t.draw();
             }
         }
     }

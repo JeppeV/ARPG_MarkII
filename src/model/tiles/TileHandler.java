@@ -86,8 +86,8 @@ public class TileHandler implements Observer {
 
     public ArrayList<TileImpl> getNeighbours(int x, int y, int size, boolean includeCenter) {
         ArrayList<TileImpl> result = new ArrayList<>();
-        for (int i = -1*size; i < size + 1; i++) {
-            for (int j = -1*size; j < size + 1; j++) {
+        for (int i = -1 * size; i < size + 1; i++) {
+            for (int j = -1 * size; j < size + 1; j++) {
                 if ((!includeCenter && (i == 0 && j == 0)) || !isIndexWithinBounds(x + i, y + j)) continue;
                 result.add(getTileByIndex(x + i, y + j));
 
