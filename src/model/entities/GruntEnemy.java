@@ -21,6 +21,7 @@ public class GruntEnemy extends Enemy implements Entity {
 
     public GruntEnemy(float x, float y, GameImpl game) {
         super(x, y, game);
+        System.out.println("Enemy " + x + ", " + y);
         this.width = 30;
         this.height = 30;
         this.mass = 10;
@@ -76,7 +77,8 @@ public class GruntEnemy extends Enemy implements Entity {
         }
 
 
-        //steering = steering.add(collisionAvoidance());
+
+        steering = steering.add(collisionAvoidance());
 
         //if adding steering to the current velocity does not exceed our maxSpeed, add steering to velocity
         if (velocity.copy().add(steering).length() < getMaxSpeed()) {

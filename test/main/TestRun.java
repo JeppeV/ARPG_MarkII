@@ -29,8 +29,6 @@ public class TestRun {
         mapGenerator = new DungeonGenerator();
         map = mapGenerator.generateMap(100, 100);
         tileHandler = new TileHandler(map);
-
-
     }
 
     @Test
@@ -47,8 +45,8 @@ public class TestRun {
             AppGameContainer app = new AppGameContainer(new MainGame());
             Input.disableControllers();
             app.setDisplayMode(1300, 600, false);
-            app.setVSync(true);
-            app.setTargetFrameRate(60);
+            //app.setVSync(true);
+            //app.setTargetFrameRate(60);
             app.setMinimumLogicUpdateInterval(10);
             app.setMaximumLogicUpdateInterval(20);
             app.start();

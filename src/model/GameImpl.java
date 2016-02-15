@@ -21,6 +21,8 @@ import org.newdawn.slick.util.pathfinding.navmesh.NavMesh;
 import org.newdawn.slick.util.pathfinding.navmesh.NavMeshBuilder;
 
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Jeppe Vinberg on 15-01-2016.
@@ -31,18 +33,17 @@ public class GameImpl implements Game {
     private Rectangle cameraBounds;
     private Player player;
     private MapAdapter mapAdapter;
-    private NavMesh navMesh;
     private OffsetHandler offsetHandler;
     private TileHandler tileHandler;
     private EntityHandler entityHandler;
+    private ExecutorService executorService;
 
     public GameImpl(GameContainer gameContainer) {
         this.gameContainer = gameContainer;
         this.cameraBounds = new Rectangle(0, 0, gameContainer.getWidth(), gameContainer.getHeight());
+        this.executorService = Executors.newCachedThreadPool();
         Map map = generateMap(new DungeonGenerator(), 100, 100);
         this.mapAdapter = new MapAdapter(map);
-        NavMeshBuilder navMeshBuilder = new NavMeshBuilder();
-        this.navMesh = navMeshBuilder.build(mapAdapter, true);
         this.tileHandler = new TileHandler(map);
         this.entityHandler = new EntityHandler();
         this.offsetHandler = new OffsetHandler();
@@ -55,8 +56,9 @@ public class GameImpl implements Game {
         start = start == null ? new Vector2f(50, 50) : start;
         this.player = new Player(start.getX(), start.getY(), playerWidth, playerHeight, this);
         entityHandler.add(player);
-        //test enemy
+        //test enemies
         entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
+        //addEnemies(200);
 
     }
 
@@ -64,12 +66,22 @@ public class GameImpl implements Game {
         return mapGenerator.generateMap(width, height);
     }
 
+    private void addEnemies(int n){
+        Vector2f pos;
+        for(int i = 0; i < n; i++){
+            pos = getRandomStartingPosition();
+            if(pos != null){
+                entityHandler.add(new GruntEnemy(pos.getX(), pos.getY(), this));
+            }
+        }
+    }
+
     private Vector2f getRandomStartingPosition() {
         TileImpl t;
         for (int x = 0; x < mapAdapter.getWidthInTiles(); x++) {
             for (int y = 0; y < mapAdapter.getHeightInTiles(); y++) {
                 t = tileHandler.getTileByIndex(x, y);
-                if (t.getID() == TileType.FLOOR && Math.random() <= 0.2f) {
+                if (t.getID() == TileType.FLOOR && Math.random() <= 0.5f) {
                     return new Vector2f(t.getCenterX(), t.getCenterY());
                 }
             }
@@ -80,6 +92,10 @@ public class GameImpl implements Game {
     @Override
     public void update(GameContainer gameContainer, int delta) throws SlickException {
         entityHandler.update(gameContainer, delta);
+    }
+
+    public ExecutorService getExecutorService(){
+        return executorService;
     }
 
     public MapAdapter getMapAdapter(){

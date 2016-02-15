@@ -30,16 +30,15 @@ public abstract class Enemy implements Entity, Mover {
     private OffsetHandler offsetHandler;
     private float moveThreshold, moveSlowdownFactor;
 
-    private Vector2f ahead, ahead2;
-    private float MAX_SEE_AHEAD = 90.0f;
-    private float MAX_AVOIDANCE = 0.6f;
+    private float MAX_SEE_AHEAD = 70.0f;
+    private float MAX_AVOIDANCE = 0.9f;
 
 
     public Enemy(float x, float y, GameImpl game) {
         this.game = game;
         this.offsetHandler = game.getOffsetHandler();
         this.tileHandler = game.getTileHandler();
-        this.pathFinder = new AStarPathFinder(game.getMapAdapter(), 20, true);
+        this.pathFinder = new AStarPathFinder(game.getMapAdapter(), 15, true);
         this.path = null;
         this.step = 0;
         this.position = initPosition(x, y, game.getOffsetHandler());
@@ -70,6 +69,7 @@ public abstract class Enemy implements Entity, Mover {
     }
 
     protected Vector2f collisionAvoidance(){
+        Vector2f ahead, ahead2;
         Vector2f avoidance = new Vector2f(0, 0);
         TileImpl tile;
 
@@ -96,22 +96,20 @@ public abstract class Enemy implements Entity, Mover {
     }
 
     private TileImpl mostThreateningTile(Vector2f ahead, Vector2f ahead2){
-        TileImpl t, result = null;
+        //TileImpl t;
+        TileImpl result = null;
         float d, bestDistance = 0.0f;
         boolean collision;
         Vector2f tCenter;
-
-        for(int x = 0; x < tileHandler.getWidthInTiles(); x++){
-            for(int y = 0; y < tileHandler.getHeightInTiles(); y++){
-                t = tileHandler.getTileByIndex(x, y);
-                collision = vectorIntersectsTile(ahead, t) || vectorIntersectsTile(ahead2, t) || vectorIntersectsTile(getCenterPosition(), t);
-                if(collision){
-                    tCenter = new Vector2f(t.getCenterX(), t.getCenterY());
-                    d = position.distance(tCenter);
-                    if(result == null || (d < bestDistance)){
-                        result = t;
-                        bestDistance = d;
-                    }
+        Vector2f index = tileHandler.getIndexByPosition(getGlobalCenterPosition().getX(), getGlobalCenterPosition().getY());
+        for(TileImpl t : tileHandler.getNeighbours((int)index.getX(), (int)index.getY(), 2, true)){
+            collision = vectorIntersectsTile(ahead, t) || vectorIntersectsTile(ahead2, t) || vectorIntersectsTile(getCenterPosition(), t);
+            if(collision){
+                tCenter = new Vector2f(t.getCenterX(), t.getCenterY());
+                d = position.distance(tCenter);
+                if(result == null || (d < bestDistance)){
+                    result = t;
+                    bestDistance = d;
                 }
             }
         }
@@ -120,7 +118,8 @@ public abstract class Enemy implements Entity, Mover {
 
     private boolean vectorIntersectsTile(Vector2f v, TileImpl t){
         Vector2f tileCenter = new Vector2f(t.getCenterX(), t.getCenterY());
-        return t.getID() == TileType.WALL && v.distance(tileCenter) <= Tile.SIZE / 2;
+        //return t.getID() == TileType.WALL && v.distance(tileCenter) <= Tile.SIZE / 2;
+        return t.getID() == TileType.WALL && t.contains(v.getX(), v.getY());
     }
 
     protected Vector2f slowdown(Vector2f vel) {
@@ -138,7 +137,6 @@ public abstract class Enemy implements Entity, Mover {
             path = getNewPathTo(e);
             step = 0;
             currentTarget = e;
-
         }
 
         if(path != null && step < path.getLength()){
