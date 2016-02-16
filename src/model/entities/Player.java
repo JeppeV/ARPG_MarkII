@@ -4,7 +4,6 @@ import generator.standard.TileType;
 import model.GameImpl;
 import model.Movement;
 import model.OffsetHandler;
-import model.facade.Entity;
 import model.tiles.TileHandler;
 import model.tiles.TileImpl;
 import org.newdawn.slick.GameContainer;
@@ -176,24 +175,8 @@ public class Player implements Entity {
     }
 
     @Override
-    public Vector2f getGlobalCenterPosition() {
-        Vector2f result = getCenterPosition().copy().add(offsetHandler.getOffset());
-        return result;
-    }
-
-    public Vector2f getGlobalCenterPosition(float x, float y) {
-        Vector2f result = getCenterPosition().copy().add(offsetHandler.getOffset());
-        return result;
-    }
-
-    @Override
     public float getRotation() {
         return 0;
-    }
-
-    @Override
-    public void addForce(Vector2f force) {
-        velocity.add(force);
     }
 
     @Override
@@ -231,7 +214,7 @@ public class Player implements Entity {
         if (!checkCollision) return false;
 
         //actual collision
-        for (TileImpl t : tileHandler.getNeighboursByPosition(getGlobalCenterPosition())) {
+        for (TileImpl t : tileHandler.getNeighboursByPosition(getCenterPosition())) {
             if (t.getID() == TileType.WALL && r.intersects(t)) return true;
         }
         return false;

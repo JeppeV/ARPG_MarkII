@@ -3,6 +3,7 @@ package main;
 import generator.generators.dungeon.DungeonGenerator;
 import generator.standard.Map;
 import generator.standard.MapGenerator;
+import model.OffsetHandler;
 import model.tiles.TileHandler;
 import model.tiles.TileImpl;
 import org.junit.Before;
@@ -28,7 +29,7 @@ public class TestRun {
     public void setup(){
         mapGenerator = new DungeonGenerator();
         map = mapGenerator.generateMap(100, 100);
-        tileHandler = new TileHandler(map);
+        tileHandler = new TileHandler(map, new OffsetHandler());
     }
 
     @Test

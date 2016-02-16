@@ -1,8 +1,8 @@
 package view;
 
 import generator.standard.TileType;
-import model.facade.Game;
-import model.facade.Tile;
+import model.Game;
+import model.tiles.Tile;
 import org.newdawn.slick.SlickException;
 
 /**

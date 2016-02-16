@@ -1,8 +1,8 @@
 package view;
 
+import model.Game;
+import model.entities.Entity;
 import model.entities.EntityID;
-import model.facade.Entity;
-import model.facade.Game;
 import org.newdawn.slick.SlickException;
 
 import java.util.LinkedList;

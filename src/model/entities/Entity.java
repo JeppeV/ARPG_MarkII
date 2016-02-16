@@ -1,4 +1,4 @@
-package model.facade;
+package model.entities;
 
 
 import org.newdawn.slick.GameContainer;
@@ -45,22 +45,9 @@ public interface Entity {
     Vector2f getCenterPosition();
 
     /**
-     * This method is used to determine the center position of this entity in the game world.
-     * That is, game world offset is taken into account.
-     *
-     * @return the center position of this entity in the context of the game world.
-     */
-    Vector2f getGlobalCenterPosition();
-
-    /**
      * @return the current angle of this entity
      */
     float getRotation();
-
-    /**
-     * @param force the force to be added to this entity's velocity
-     */
-    void addForce(Vector2f force);
 
     /**
      * @return the ID identifying the type of this entity

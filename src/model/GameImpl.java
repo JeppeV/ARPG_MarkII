@@ -5,12 +5,11 @@ import generator.generators.dungeon.DungeonGenerator;
 import generator.standard.Map;
 import generator.standard.MapGenerator;
 import generator.standard.TileType;
+import model.entities.Entity;
 import model.entities.EntityHandler;
 import model.entities.GruntEnemy;
 import model.entities.Player;
-import model.facade.Entity;
-import model.facade.Game;
-import model.facade.Tile;
+import model.tiles.Tile;
 import model.tiles.TileHandler;
 import model.tiles.TileImpl;
 import org.newdawn.slick.GameContainer;
@@ -42,10 +41,11 @@ public class GameImpl implements Game {
         this.executorService = Executors.newCachedThreadPool();
         Map map = generateMap(new DungeonGenerator(), 100, 100);
         this.mapAdapter = new MapAdapter(map);
-        this.tileHandler = new TileHandler(map);
-        this.entityHandler = new EntityHandler();
+
         this.offsetHandler = new OffsetHandler();
+        this.tileHandler = new TileHandler(map, offsetHandler);
         offsetHandler.addObserver(tileHandler);
+        this.entityHandler = new EntityHandler();
         offsetHandler.addObserver(entityHandler);
 
         //test values for player
@@ -55,7 +55,6 @@ public class GameImpl implements Game {
         this.player = new Player(start.getX(), start.getY(), playerWidth, playerHeight, this);
         entityHandler.add(player);
         //test enemies
-        entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
         entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
         //addEnemies(200);
 

@@ -1,6 +1,6 @@
 package view;
 
-import model.facade.Game;
+import model.Game;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 

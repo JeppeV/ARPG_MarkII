@@ -1,7 +1,7 @@
 package model.tiles;
 
 import generator.standard.Map;
-import model.facade.Tile;
+import model.OffsetHandler;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.ArrayList;
@@ -13,9 +13,11 @@ import java.util.Observer;
  */
 public class TileHandler implements Observer {
 
+    private OffsetHandler offsetHandler;
     private TileImpl[][] tiles;
 
-    public TileHandler(Map map) {
+    public TileHandler(Map map, OffsetHandler offsetHandler) {
+        this.offsetHandler = offsetHandler;
         this.tiles = initTiles(map);
     }
 
@@ -47,28 +49,34 @@ public class TileHandler implements Observer {
     }
 
     public TileImpl getTileByPosition(float x, float y) {
-        int x0 = (int) x / Tile.SIZE;
-        int y0 = (int) y / Tile.SIZE;
+        int x0 = (int) ((x + offsetHandler.getXOffset()) / Tile.SIZE);
+        int y0 = (int) ((y + offsetHandler.getYOffset()) / Tile.SIZE);
         return tiles[x0][y0];
     }
 
     public ArrayList<TileImpl> getNeighboursByPosition(float x, float y) {
-        int x0 = (int) x / Tile.SIZE;
-        int y0 = (int) y / Tile.SIZE;
+        int x0 = (int) ((x + offsetHandler.getXOffset()) / Tile.SIZE);
+        int y0 = (int) ((y + offsetHandler.getYOffset()) / Tile.SIZE);
         return getNeighbours(x0, y0);
 
     }
 
     public ArrayList<TileImpl> getNeighboursByPosition(Vector2f position) {
-        int x0 = (int) position.getX() / Tile.SIZE;
-        int y0 = (int) position.getY() / Tile.SIZE;
+        int x0 = (int) ((position.getX() + offsetHandler.getXOffset()) / Tile.SIZE);
+        int y0 = (int) ((position.getY() + offsetHandler.getYOffset()) / Tile.SIZE);
         return getNeighbours(x0, y0);
 
     }
 
     public Vector2f getIndexByPosition(float x, float y) {
-        int x0 = (int) x / Tile.SIZE;
-        int y0 = (int) y / Tile.SIZE;
+        int x0 = (int) ((x + offsetHandler.getXOffset()) / Tile.SIZE);
+        int y0 = (int) ((y + offsetHandler.getYOffset()) / Tile.SIZE);
+        return new Vector2f(x0, y0);
+    }
+
+    public Vector2f getIndexByPosition(Vector2f position) {
+        int x0 = (int) ((position.getX() + offsetHandler.getXOffset()) / Tile.SIZE);
+        int y0 = (int) ((position.getY() + offsetHandler.getYOffset()) / Tile.SIZE);
         return new Vector2f(x0, y0);
     }
 

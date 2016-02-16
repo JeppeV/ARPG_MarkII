@@ -1,8 +1,7 @@
 package model.entities;
 
 import model.GameImpl;
-import model.facade.Entity;
-import model.facade.Tile;
+import model.tiles.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;

@@ -1,7 +1,7 @@
 package view;
 
 
-import model.facade.Entity;
+import model.entities.Entity;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;

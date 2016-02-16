@@ -3,8 +3,7 @@ package model.entities;
 import generator.standard.TileType;
 import model.GameImpl;
 import model.OffsetHandler;
-import model.facade.Entity;
-import model.facade.Tile;
+import model.tiles.Tile;
 import model.tiles.TileHandler;
 import model.tiles.TileImpl;
 import org.newdawn.slick.geom.Vector2f;
@@ -27,7 +26,6 @@ public abstract class Enemy implements Entity, Mover {
     private int step;
 
     private Entity currentTarget;
-    private OffsetHandler offsetHandler;
     private float moveThreshold, moveSlowdownFactor;
 
     private float MAX_SEE_AHEAD = 70.0f;
@@ -36,7 +34,6 @@ public abstract class Enemy implements Entity, Mover {
 
     public Enemy(float x, float y, GameImpl game) {
         this.game = game;
-        this.offsetHandler = game.getOffsetHandler();
         this.tileHandler = game.getTileHandler();
         this.pathFinder = new AStarPathFinder(game.getMapAdapter(), 15, true);
         this.path = null;
@@ -101,7 +98,7 @@ public abstract class Enemy implements Entity, Mover {
         float d, bestDistance = 0.0f;
         boolean collision;
         Vector2f tCenter;
-        Vector2f index = tileHandler.getIndexByPosition(getGlobalCenterPosition().getX(), getGlobalCenterPosition().getY());
+        Vector2f index = tileHandler.getIndexByPosition(getCenterPosition().getX(), getCenterPosition().getY());
         for (TileImpl t : tileHandler.getNeighbours((int) index.getX(), (int) index.getY(), 2, true)) {
             collision = vectorIntersectsTile(ahead, t) || vectorIntersectsTile(ahead2, t) || vectorIntersectsTile(getCenterPosition(), t);
             if (collision) {
@@ -156,8 +153,8 @@ public abstract class Enemy implements Entity, Mover {
 
 
     private Path getNewPathTo(Entity e) {
-        Vector2f source = new Vector2f(tileHandler.getIndexByPosition(getGlobalCenterPosition().getX(), getGlobalCenterPosition().getY()));
-        Vector2f target = new Vector2f(tileHandler.getIndexByPosition(e.getGlobalCenterPosition().getX(), e.getGlobalCenterPosition().getY()));
+        Vector2f source = new Vector2f(tileHandler.getIndexByPosition(getCenterPosition()));
+        Vector2f target = new Vector2f(tileHandler.getIndexByPosition(e.getCenterPosition()));
         return pathFinder.findPath(this, (int) source.getX(), (int) source.getY(), (int) target.getX(), (int) target.getY());
     }
 
@@ -185,17 +182,6 @@ public abstract class Enemy implements Entity, Mover {
     @Override
     public Vector2f getCenterPosition() {
         return new Vector2f(getX() + getWidth() / 2, getY() + getHeight() / 2);
-    }
-
-    @Override
-    public Vector2f getGlobalCenterPosition() {
-        Vector2f result = getCenterPosition().copy().add(offsetHandler.getOffset());
-        return result;
-    }
-
-    @Override
-    public void addForce(Vector2f force) {
-        velocity.add(force);
     }
 
 

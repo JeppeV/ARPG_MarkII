@@ -1,6 +1,5 @@
 package model.entities;
 
-import model.facade.Entity;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;

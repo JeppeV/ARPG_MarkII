@@ -1,6 +1,5 @@
 package model.tiles;
 
-import model.facade.Tile;
 import org.newdawn.slick.geom.Rectangle;
 
 /**
