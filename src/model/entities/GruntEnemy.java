@@ -19,7 +19,6 @@ public class GruntEnemy extends Enemy implements Entity {
 
     public GruntEnemy(float x, float y, GameImpl game) {
         super(x, y, game);
-        System.out.println("Enemy " + x + ", " + y);
         this.width = 30;
         this.height = 30;
         this.mass = 10;

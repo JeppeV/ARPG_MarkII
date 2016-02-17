@@ -68,4 +68,5 @@ public interface Entity {
      * @return the bounding rectangle of this entity used for collision detection
      */
     Rectangle getCollisionBox();
+
 }
