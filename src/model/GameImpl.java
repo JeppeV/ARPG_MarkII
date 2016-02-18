@@ -53,11 +53,11 @@ public class GameImpl implements Game {
         Vector2f start = getRandomStartingPosition();
         start = start == null ? new Vector2f(50, 50) : start;
         this.player = new Player(start.getX(), start.getY(), playerWidth, playerHeight, this);
-        System.out.println("Offset: " + offsetHandler.getXOffset() + ", " + offsetHandler.getYOffset());
         entityHandler.add(player);
+        start.sub(offsetHandler.getOffset());
         //test enemies
         //entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
-        addEnemies(50);
+        addEnemies(1, start.getX(), start.getY());
 
     }
 
@@ -72,6 +72,13 @@ public class GameImpl implements Game {
             if (pos != null) {
                 entityHandler.add(new GruntEnemy(pos.getX(), pos.getY(), this));
             }
+        }
+    }
+
+    private void addEnemies(int n, float x, float y) {
+        Vector2f pos = new Vector2f(x, y);
+        for (int i = 0; i < n; i++) {
+            entityHandler.add(new GruntEnemy(pos.getX(), pos.getY(), this));
         }
     }
 

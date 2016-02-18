@@ -3,6 +3,7 @@ package model.entities;
 import generator.standard.TileType;
 import model.GameImpl;
 import model.OffsetHandler;
+import model.PathContext;
 import model.tiles.Tile;
 import model.tiles.TileHandler;
 import model.tiles.TileImpl;
@@ -19,13 +20,13 @@ public abstract class Enemy implements Entity, Mover {
     protected GameImpl game;
     protected TileHandler tileHandler;
     protected Vector2f position, velocity;
-    protected boolean attacking;
+    protected boolean inCombat;
 
-    private AStarPathFinder pathFinder;
-    private Path path;
-    private int step;
+    private AStarPathFinder pathFinder12;
+    private AStarPathFinder pathFinder5;
 
-    private Entity currentTarget;
+    private PathContext pathContext;
+
     private float moveThreshold, moveSlowdownFactor;
 
     private float MAX_SEE_AHEAD = 70.0f;
@@ -35,14 +36,14 @@ public abstract class Enemy implements Entity, Mover {
     public Enemy(float x, float y, GameImpl game) {
         this.game = game;
         this.tileHandler = game.getTileHandler();
-        this.pathFinder = new AStarPathFinder(game.getMapAdapter(), 15, true);
-        this.path = null;
-        this.step = 0;
+        this.pathFinder12 = new AStarPathFinder(game.getMapAdapter(), 12, true);
+        this.pathFinder5 = new AStarPathFinder(game.getMapAdapter(), 5, true);
+        this.pathContext = new PathContext(null, 0, null);
         this.position = new Vector2f(x, y);
         //this.position = initPosition(x, y, game.getOffsetHandler());
         System.out.println("Enemy " + position.getX() + ", " + position.getY());
         this.velocity = new Vector2f(0, 0);
-        this.attacking = false;
+        this.inCombat = false;
         this.moveThreshold = 0.0001f;
         this.moveSlowdownFactor = 0.75f;
     }
@@ -131,70 +132,57 @@ public abstract class Enemy implements Entity, Mover {
 
     protected Vector2f followPathTo(Entity e, boolean forceNewPath) {
         Vector2f target, result = new Vector2f(0, 0);
-        if (forceNewPath || path == null || !e.equals(currentTarget)) {
-            updatePathTo(e, forceNewPath);
-        }
+        Path path = pathContext.getPath();
+        int step = pathContext.getStep();
+        Entity currentTarget = pathContext.getTarget();
 
         if (path != null && step < path.getLength()) {
 
             TileImpl t = tileHandler.getTileByIndex(path.getX(step), path.getY(step));
             target = new Vector2f(t.getCenterX(), t.getCenterY());
             if (getCenterPosition().distance(target) <= Tile.SIZE / 4) {
-                step++;
+                pathContext.setStep(pathContext.getStep() + 1);
             }
             result = seek(target);
-        } else {
-            path = null;
-            currentTarget = null;
+        }else{
+            pathContext = new PathContext(null, 0, null);
+        }
+
+        path = pathContext.getPath();
+
+        if (forceNewPath || path == null || !e.equals(currentTarget)) {
+            pathContext = updatePathTo(e);
         }
 
         return result;
     }
 
+    protected boolean existsPathTo(Entity e){
+        Vector2f source = new Vector2f(tileHandler.getIndexByPosition(getCenterPosition()));
+        Vector2f target = new Vector2f(tileHandler.getIndexByPosition(e.getCenterPosition()));
+        Path path = pathFinder5.findPath(this, (int) source.getX(), (int) source.getY(), (int) target.getX(), (int) target.getY());
+        return path != null;
+    }
 
-    private void updatePathTo(Entity e, boolean forceNewPath) {
-        //try to get an existing path from nearby enemy
-        if(!forceNewPath) getExistingPathTo(e);
+
+    private PathContext updatePathTo(Entity e) {
+        PathContext result = new PathContext(null, 0, null);
         //if it was not successful, find new path
-        if(forceNewPath || path == null){
+        if(result.getPath() == null){
             Vector2f source = new Vector2f(tileHandler.getIndexByPosition(getCenterPosition()));
             Vector2f target = new Vector2f(tileHandler.getIndexByPosition(e.getCenterPosition()));
-            path = pathFinder.findPath(this, (int) source.getX(), (int) source.getY(), (int) target.getX(), (int) target.getY());
-            step = 0;
-            currentTarget = e;
+            Path path = pathFinder12.findPath(this, (int) source.getX(), (int) source.getY(), (int) target.getX(), (int) target.getY());
+            result = new PathContext(path, 0, e);
         }
+        return result;
     }
 
-    private void getExistingPathTo(Entity entity){
-        Entity target;
-        Enemy enemy;
-        for(Entity e : game.getEntities()){
-            if(this.getCenterPosition().distance(e.getCenterPosition()) >= Tile.SIZE) continue;
-            if(e.equals(this)) continue;
-            if(e instanceof Enemy){
-                enemy = (Enemy) e;
-                target = enemy.getCurrentTarget();
-                if(target != null && target.equals(entity)){
-                    path = enemy.getCurrentPath();
-                    step = enemy.getCurrentStep();
-                    currentTarget = target;
-                    return;
-                }
-            }
-        }
-        path = null;
-    }
-
-    public Path getCurrentPath(){
-        return path;
-    }
-
-    public int getCurrentStep(){
-        return step;
+    public PathContext getPathContextCopy(){
+        return new PathContext(pathContext.getPath(), pathContext.getStep(), pathContext.getTarget());
     }
 
     public Entity getCurrentTarget(){
-        return currentTarget;
+        return pathContext.getTarget();
     }
 
 

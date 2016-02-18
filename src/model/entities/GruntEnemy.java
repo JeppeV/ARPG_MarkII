@@ -55,27 +55,28 @@ public class GruntEnemy extends Enemy implements Entity {
     @Override
     public void update(GameContainer gameContainer, int delta) {
         Vector2f steering = new Vector2f(0, 0);
-
-        //find a target to move towards
         Entity target = acquireTarget();
-
-        //if there is a target, steer towards it
-        if (target != null && target.getCenterPosition().distance(getCenterPosition()) < Tile.SIZE) {
-            steering = steering.add(seek(target.getCenterPosition()));
-            closeFollow = true;
-        } else if (target != null) {
-            if (closeFollow) {
-                steering = followPathTo(target, true);
-                closeFollow = false;
-            } else {
-                steering = followPathTo(target, false);
+        if(!inCombat && target.getCenterPosition().distance(getCenterPosition()) <= Tile.SIZE * 4){
+            inCombat = existsPathTo(target);
+        }
+        if(inCombat){
+            //if there is a target, steer towards it
+            if (target != null && target.getCenterPosition().distance(getCenterPosition()) < Tile.SIZE) {
+                steering = steering.add(seek(target.getCenterPosition()));
+                closeFollow = true;
+            } else if (target != null) {
+                if (closeFollow) {
+                    steering = followPathTo(target, true);
+                    closeFollow = false;
+                } else {
+                    steering = followPathTo(target, false);
+                }
             }
 
+            steering = steering.add(tileCollisionAvoidance());
         }
 
-
-        steering = steering.add(tileCollisionAvoidance());
-
+        if(getPathContextCopy().getPath() == null) inCombat = false;
 
         //if adding steering to the current velocity does not exceed our maxSpeed, add steering to velocity
         if (velocity.copy().add(steering).length() < getMaxSpeed()) {
