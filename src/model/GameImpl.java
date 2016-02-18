@@ -53,13 +53,11 @@ public class GameImpl implements Game {
         Vector2f start = getRandomStartingPosition();
         start = start == null ? new Vector2f(50, 50) : start;
         this.player = new Player(start.getX(), start.getY(), playerWidth, playerHeight, this);
-        System.out.println(offsetHandler.getXOffset() + ", " + offsetHandler.getYOffset());
+        System.out.println("Offset: " + offsetHandler.getXOffset() + ", " + offsetHandler.getYOffset());
         entityHandler.add(player);
         //test enemies
-        entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
-        //entityHandler.add(new GruntEnemy(start.getX()+5, start.getY()+10, this));
-        //entityHandler.add(new GruntEnemy(start.getX()-5, start.getY()-10, this));
-        //addEnemies(5);
+        //entityHandler.add(new GruntEnemy(start.getX(), start.getY(), this));
+        addEnemies(50);
 
     }
 
@@ -82,7 +80,7 @@ public class GameImpl implements Game {
         for (int x = 0; x < mapAdapter.getWidthInTiles(); x++) {
             for (int y = 0; y < mapAdapter.getHeightInTiles(); y++) {
                 t = tileHandler.getTileByIndex(x, y);
-                if (t.getID() == TileType.FLOOR && Math.random() <= 0.5f) {
+                if (t.getID() == TileType.FLOOR && Math.random() <= 0.2f) {
                     return new Vector2f(t.getCenterX(), t.getCenterY());
                 }
             }

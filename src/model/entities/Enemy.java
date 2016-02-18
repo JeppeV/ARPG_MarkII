@@ -38,7 +38,8 @@ public abstract class Enemy implements Entity, Mover {
         this.pathFinder = new AStarPathFinder(game.getMapAdapter(), 15, true);
         this.path = null;
         this.step = 0;
-        this.position = initPosition(x, y, game.getOffsetHandler());
+        this.position = new Vector2f(x, y);
+        //this.position = initPosition(x, y, game.getOffsetHandler());
         System.out.println("Enemy " + position.getX() + ", " + position.getY());
         this.velocity = new Vector2f(0, 0);
         this.attacking = false;
@@ -128,10 +129,10 @@ public abstract class Enemy implements Entity, Mover {
         return vel;
     }
 
-    protected Vector2f followPathTo(Entity e, boolean newPath) {
+    protected Vector2f followPathTo(Entity e, boolean forceNewPath) {
         Vector2f target, result = new Vector2f(0, 0);
-        if (newPath || path == null || !e.equals(currentTarget)) {
-            updatePathTo(e);
+        if (forceNewPath || path == null || !e.equals(currentTarget)) {
+            updatePathTo(e, forceNewPath);
         }
 
         if (path != null && step < path.getLength()) {
@@ -151,11 +152,11 @@ public abstract class Enemy implements Entity, Mover {
     }
 
 
-    private void updatePathTo(Entity e) {
+    private void updatePathTo(Entity e, boolean forceNewPath) {
         //try to get an existing path from nearby enemy
-       getExistingPathTo(e);
+        if(!forceNewPath) getExistingPathTo(e);
         //if it was not successful, find new path
-        if(path == null){
+        if(forceNewPath || path == null){
             Vector2f source = new Vector2f(tileHandler.getIndexByPosition(getCenterPosition()));
             Vector2f target = new Vector2f(tileHandler.getIndexByPosition(e.getCenterPosition()));
             path = pathFinder.findPath(this, (int) source.getX(), (int) source.getY(), (int) target.getX(), (int) target.getY());
@@ -169,6 +170,7 @@ public abstract class Enemy implements Entity, Mover {
         Enemy enemy;
         for(Entity e : game.getEntities()){
             if(this.getCenterPosition().distance(e.getCenterPosition()) >= Tile.SIZE) continue;
+            if(e.equals(this)) continue;
             if(e instanceof Enemy){
                 enemy = (Enemy) e;
                 target = enemy.getCurrentTarget();
@@ -180,6 +182,7 @@ public abstract class Enemy implements Entity, Mover {
                 }
             }
         }
+        path = null;
     }
 
     public Path getCurrentPath(){

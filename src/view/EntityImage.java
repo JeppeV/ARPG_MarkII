@@ -30,4 +30,8 @@ public class EntityImage extends Image {
         return new Rectangle(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
     }
 
+    public Entity getEntity() {
+        return entity;
+    }
+
 }
